@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gulf Petrochemical Services – Enterprise Portal</title>
+  <link rel="icon" href="https://justingps.github.io/dpr/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js" defer></script>
+  <style>
+    :root{
+      --navy:#001B2E;
+      --orange:#FF4E00;
+      --white:#FFFFFF;
+      --graphite:#1E1E1E;
+      --grid-max:1440px;
+      --radius:8px;
+      --shadow:0 4px 24px rgba(0,0,0,.25);
+      --transition:all .35s ease;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:"Inter",sans-serif;
+      background:var(--navy);
+      color:var(--white);
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      overflow-x:hidden;
+    }
+    header{
+      width:100%;
+      max-width:var(--grid-max);
+      padding:1rem 2rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .badge{
+      background:var(--orange);
+      padding:.25rem .5rem;
+      font-size:.75rem;
+      border-radius:var(--radius);
+    }
+    #utcClock{
+      font-variant-numeric:tabular-nums;
+      font-size:.875rem;
+    }
+    main{
+      flex:1;
+      width:100%;
+      max-width:var(--grid-max);
+      padding:2rem;
+    }
+    #globe{
+      width:100%;
+      height:280px;
+      margin-bottom:2rem;
+      border-radius:var(--radius);
+      background:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1350&q=80') center/cover;
+      position:relative;
+      overflow:hidden;
+    }
+    #globe::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background:linear-gradient(135deg,rgba(0,27,46,.6),rgba(255,78,0,.2));
+    }
+    .dock{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:1.5rem;
+    }
+    .card{
+      background:var(--graphite);
+      border-radius:var(--radius);
+      padding:1.5rem;
+      box-shadow:var(--shadow);
+      transition:var(--transition);
+      cursor:pointer;
+      position:relative;
+      transform-style:preserve-3d;
+    }
+    .card:hover{transform:translateY(-6px) rotateY(-5deg)}
+    .card h3{margin-bottom:.5rem;font-weight:600}
+    .card .kpi{font-size:2rem;font-weight:700;margin:.25rem 0}
+    .card .trend{font-size:.75rem;opacity:.7}
+    .card .link{
+      position:absolute;
+      inset:0;
+      z-index:2;
+    }
+    .ribbon{
+      margin:1rem 0;
+      padding:.75rem 1rem;
+      background:rgba(255,78,0,.15);
+      border-left:4px solid var(--orange);
+      border-radius:var(--radius);
+      font-size:.875rem;
+    }
+    footer{
+      width:100%;
+      max-width:var(--grid-max);
+      padding:1rem 2rem;
+      text-align:center;
+      font-size:.75rem;
+      opacity:.6;
+    }
+    @media(max-width:768px){
+      .dock{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">GFSC 24000110790</div>
+    <div id="utcClock">--:--:-- UTC</div>
+  </header>
+
+  <main>
+    <div id="globe" aria-hidden="true"></div>
+
+    <div class="ribbon" role="status" aria-live="polite">
+      <strong>Green:</strong> All systems operational. Last sync 2 min ago.
+    </div>
+
+    <section class="dock">
+      <article class="card">
+        <h3>Employee Center</h3>
+        <div class="kpi">1,247</div>
+        <div class="trend">Active • 12 IDs expiring</div>
+        <a class="link" href="https://justingps.github.io/ems/" aria-label="Open Employee Management System"></a>
+      </article>
+
+      <article class="card">
+        <h3>Work Analytics</h3>
+        <div class="kpi">97 %</div>
+        <div class="trend">Uptime • 42 active WIs</div>
+        <a class="link" href="https://justingps.github.io/gps-oxy/" aria-label="Open Work Analytics Dashboard"></a>
+      </article>
+
+      <article class="card">
+        <h3>Compliance Vault</h3>
+        <div class="kpi">3</div>
+        <div class="trend">New SWP pending approval</div>
+        <a class="link" href="/compliance" aria-label="Open Compliance Vault"></a>
+      </article>
+
+      <article class="card">
+        <h3>Fleet & Assets</h3>
+        <div class="kpi">88 %</div>
+        <div class="trend">Utilization • 2 rigs offline</div>
+        <a class="link" href="/fleet" aria-label="Open Fleet Management"></a>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Gulf Petrochemical Services LLC – Occidental of Oman Contract
+  </footer>
+
+  <script>
+    // live UTC clock
+    const clock = () => {
+      const now = new Date().toLocaleTimeString('en-GB',{timeZone:'UTC',hour12:false});
+      document.getElementById('utcClock').textContent = `${now} UTC`;
+    };
+    setInterval(clock,1000);
+    clock();
+
+    // GSAP micro-animations
+    gsap.from('.card',{y:40,opacity:0,duration:.8,stagger:.15,ease:'power2.out'});
+  </script>
+</body>
+</html>
