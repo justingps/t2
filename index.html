@@ -269,7 +269,6 @@
     .container {
       display: none;
       min-height: 100vh;
-      flex-direction: column;
     }
 
     /* Sidebar */
@@ -368,7 +367,6 @@
     /* Main Content */
     .main-content {
       margin-left: 260px;
-      flex: 1;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -788,6 +786,34 @@
       padding: var(--spacing-xl);
     }
 
+    /* Tab Content */
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Grid Layout */
+    .grid-2-col {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--spacing-lg);
+    }
+
+    @media (min-width: 1200px) {
+      .grid-2-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     /* Responsive Adjustments */
     @media (max-width: 1200px) {
       .sidebar {
@@ -907,19 +933,19 @@
       </div>
       
       <div class="sidebar-menu">
-        <a href="#" class="menu-item active" onclick="openTab('summary')">
+        <a href="#" class="menu-item active" onclick="openTab(event, 'summary')">
           <i class="fas fa-chart-bar"></i>
           <span>Summary</span>
         </a>
-        <a href="#" class="menu-item" onclick="openTab('reports')">
+        <a href="#" class="menu-item" onclick="openTab(event, 'reports')">
           <i class="fas fa-file-alt"></i>
           <span>Reports</span>
         </a>
-        <a href="#" class="menu-item" onclick="openTab('status')">
+        <a href="#" class="menu-item" onclick="openTab(event, 'status')">
           <i class="fas fa-table"></i>
           <span>Status</span>
         </a>
-        <a href="#" class="menu-item" onclick="openTab('resource')">
+        <a href="#" class="menu-item" onclick="openTab(event, 'resource')">
           <i class="fas fa-users"></i>
           <span>Resource</span>
         </a>
@@ -1472,26 +1498,36 @@
       }
     }
     
-    function openTab(tabName) {
+    function openTab(event, tabName) {
+      event.preventDefault();
+      
+      // Hide all tab contents
       const tabContents = document.getElementsByClassName('tab-content');
       for (let i = 0; i < tabContents.length; i++) {
         tabContents[i].classList.remove('active');
       }
       
+      // Remove active class from all menu items
       const menuItems = document.querySelectorAll('.menu-item');
       for (let i = 0; i < menuItems.length; i++) {
         menuItems[i].classList.remove('active');
       }
       
+      // Show the current tab and mark its menu item as active
       document.getElementById(tabName).classList.add('active');
       event.currentTarget.classList.add('active');
       
-      if (tabName === 'summary' && allData.length > 0) {
-        updateSummaryCharts();
-      } else if (tabName === 'status' && allData.length > 0) {
-        updateStatusTable();
-      } else if (tabName === 'resource' && allData.length > 0) {
-        updateResourceTables();
+      // Update the content if data is loaded
+      if (allData.length > 0) {
+        if (tabName === 'summary') {
+          updateSummaryCharts();
+        } else if (tabName === 'status') {
+          updateStatusTable();
+        } else if (tabName === 'resource') {
+          updateResourceTables();
+        } else if (tabName === 'reports') {
+          applyFilters();
+        }
       }
     }
     
