@@ -2,178 +2,2243 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Gulf Petrochemical Services – Enterprise Portal</title>
-  <link rel="icon" href="https://justingps.github.io/dpr/logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPS Dashboard</title>
+  <link rel="icon" href="https://justingps.github.io/dpr/logo.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
   <style>
-    :root{
-      --navy:#001B2E;
-      --orange:#FF4E00;
-      --white:#FFFFFF;
-      --graphite:#1E1E1E;
-      --grid-max:1440px;
-      --radius:8px;
-      --shadow:0 4px 24px rgba(0,0,0,.25);
-      --transition:all .35s ease;
+    :root {
+      --primary-color: #20a8d8;
+      --secondary-color: #1985ac;
+      --accent-color: #f86c6b;
+      --success-color: #4dbd74;
+      --warning-color: #ffc107;
+      --danger-color: #f86c6b;
+      --info-color: #63c2de;
+      --light-color: #f0f3f5;
+      --dark-color: #2f353a;
+      --text-color: #23282c;
+      --text-muted: #73818f;
+      --border-color: #c8ced3;
+      --white: #ffffff;
+      --gray-light: #e4e7ea;
+      --gray-dark: #5c6873;
+      --sidebar-width: 220px;
+      --header-height: 55px;
+      --transition: all 0.3s ease;
+      --box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+      --box-shadow-lg: 0 1px 10px rgba(0, 0, 0, 0.1);
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:"Inter",sans-serif;
-      background:var(--navy);
-      color:var(--white);
-      min-height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      overflow-x:hidden;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    header{
-      width:100%;
-      max-width:var(--grid-max);
-      padding:1rem 2rem;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f5f7fa;
+      color: var(--text-color);
+      line-height: 1.5;
+      overflow-x: hidden;
     }
-    .badge{
-      background:var(--orange);
-      padding:.25rem .5rem;
-      font-size:.75rem;
-      border-radius:var(--radius);
+
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--primary-color);
+      background-image: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      z-index: -1;
     }
-    #utcClock{
-      font-variant-numeric:tabular-nums;
-      font-size:.875rem;
+
+    /* Login Page Styles */
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
     }
-    main{
-      flex:1;
-      width:100%;
-      max-width:var(--grid-max);
-      padding:2rem;
+
+    .login-box {
+      background-color: var(--white);
+      border-radius: 4px;
+      box-shadow: 0 7px 30px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      overflow: hidden;
     }
-    #globe{
-      width:100%;
-      height:280px;
-      margin-bottom:2rem;
-      border-radius:var(--radius);
-      background:url('https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1350&q=80') center/cover;
-      position:relative;
-      overflow:hidden;
+
+    .login-header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 20px;
+      text-align: center;
     }
-    #globe::after{
-      content:'';
-      position:absolute;
-      inset:0;
-      background:linear-gradient(135deg,rgba(0,27,46,.6),rgba(255,78,0,.2));
+
+    .login-header img {
+      height: 50px;
+      margin-bottom: 10px;
     }
-    .dock{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:1.5rem;
+
+    .login-header h1 {
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 5px;
     }
-    .card{
-      background:var(--graphite);
-      border-radius:var(--radius);
-      padding:1.5rem;
-      box-shadow:var(--shadow);
-      transition:var(--transition);
-      cursor:pointer;
-      position:relative;
-      transform-style:preserve-3d;
+
+    .login-header p {
+      font-size: 14px;
+      opacity: 0.9;
     }
-    .card:hover{transform:translateY(-6px) rotateY(-5deg)}
-    .card h3{margin-bottom:.5rem;font-weight:600}
-    .card .kpi{font-size:2rem;font-weight:700;margin:.25rem 0}
-    .card .trend{font-size:.75rem;opacity:.7}
-    .card .link{
-      position:absolute;
-      inset:0;
-      z-index:2;
+
+    .login-body {
+      padding: 20px;
     }
-    .ribbon{
-      margin:1rem 0;
-      padding:.75rem 1rem;
-      background:rgba(255,78,0,.15);
-      border-left:4px solid var(--orange);
-      border-radius:var(--radius);
-      font-size:.875rem;
+
+    .form-group {
+      margin-bottom: 20px;
     }
-    footer{
-      width:100%;
-      max-width:var(--grid-max);
-      padding:1rem 2rem;
-      text-align:center;
-      font-size:.75rem;
-      opacity:.6;
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--dark-color);
     }
-    @media(max-width:768px){
-      .dock{grid-template-columns:1fr}
+
+    .input-group {
+      position: relative;
+    }
+
+    .input-group .input-group-prepend {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      background-color: #f0f3f5;
+      border: 1px solid var(--border-color);
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 10px 10px 50px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+      transition: var(--transition);
+      background-color: var(--white);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(32, 168, 216, 0.2);
+    }
+
+    .login-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-size: 13px;
+    }
+
+    .custom-checkbox {
+      display: flex;
+      align-items: center;
+    }
+
+    .custom-checkbox input {
+      margin-right: 8px;
+    }
+
+    .btn {
+      display: inline-block;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      user-select: none;
+      border: 1px solid transparent;
+      padding: 10px 16px;
+      font-size: 16px;
+      line-height: 1.5;
+      border-radius: 4px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .btn-block {
+      display: block;
+      width: 100%;
+    }
+
+    .btn-primary {
+      color: var(--white);
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary-color);
+      border-color: var(--secondary-color);
+    }
+
+    .login-footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .alert {
+      position: relative;
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      display: none;
+      align-items: center;
+    }
+
+    .alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+
+    .alert i {
+      margin-right: 8px;
+    }
+
+    /* Dashboard Styles */
+    .app {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .app-header {
+      height: var(--header-height);
+      background-color: var(--white);
+      box-shadow: var(--box-shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    .app-header .logo {
+      height: 40px;
+    }
+
+    .app-header .header-nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .app-header .header-nav .nav-item {
+      margin-left: 15px;
+    }
+
+    .app-header .header-nav .nav-link {
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+    }
+
+    .app-header .header-nav .nav-link:hover {
+      color: var(--primary-color);
+    }
+
+    .app-header .header-nav .nav-link i {
+      font-size: 18px;
+    }
+
+    .app-body {
+      display: flex;
+      flex: 1;
+      padding-top: var(--header-height);
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--dark-color);
+      color: var(--white);
+      position: fixed;
+      top: var(--header-height);
+      left: 0;
+      bottom: 0;
+      z-index: 100;
+      overflow-y: auto;
+      transition: var(--transition);
+    }
+
+    .sidebar-nav {
+      padding: 20px 0;
+    }
+
+    .nav-title {
+      padding: 10px 20px;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 600;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--white);
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-link i {
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .nav-link .badge {
+      margin-left: auto;
+    }
+
+    .main {
+      flex: 1;
+      margin-left: var(--sidebar-width);
+      padding: 20px;
+      background-color: #f5f7fa;
+      min-height: calc(100vh - var(--header-height));
+    }
+
+    .breadcrumb {
+      background-color: transparent;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb-item {
+      display: inline-block;
+      font-size: 14px;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+      content: "/";
+      padding: 0 5px;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb-item.active {
+      color: var(--text-muted);
+    }
+
+    .card {
+      background-color: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      box-shadow: var(--box-shadow);
+      margin-bottom: 20px;
+    }
+
+    .card-header {
+      padding: 15px 20px;
+      background-color: transparent;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-footer {
+      padding: 15px 20px;
+      background-color: #f8f9fa;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .table-responsive {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .table {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 20px;
+      background-color: transparent;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 12px 15px;
+      vertical-align: top;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid var(--border-color);
+      background-color: #f0f3f5;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(32, 168, 216, 0.05);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      font-size: 75%;
+      font-weight: 600;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 4px;
+    }
+
+    .badge-primary {
+      color: var(--white);
+      background-color: var(--primary-color);
+    }
+
+    .badge-success {
+      color: var(--white);
+      background-color: var(--success-color);
+    }
+
+    .badge-warning {
+      color: var(--white);
+      background-color: var(--warning-color);
+    }
+
+    .badge-danger {
+      color: var(--white);
+      background-color: var(--danger-color);
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+
+    .status-active {
+      background-color: var(--success-color);
+    }
+
+    .status-inactive {
+      background-color: var(--warning-color);
+    }
+
+    .no-data {
+      color: var(--text-muted);
+      font-style: italic;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(32, 168, 216, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--primary-color);
+      animation: spin 1s linear infinite;
+      margin-bottom: 15px;
+    }
+
+    .loading-text {
+      font-size: 16px;
+      color: var(--dark-color);
+      margin-bottom: 5px;
+    }
+
+    .loading-subtext {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      margin-right: -10px;
+      margin-left: -10px;
+    }
+
+    .form-group {
+      padding-right: 10px;
+      padding-left: 10px;
+      margin-bottom: 15px;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px rgba(32, 168, 216, 0.2);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .summary-item {
+      background-color: var(--white);
+      border-radius: 4px;
+      padding: 20px;
+      box-shadow: var(--box-shadow);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .summary-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .summary-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--dark-color);
+    }
+
+    .work-group {
+      margin-bottom: 20px;
+      border-radius: 4px;
+      background-color: var(--white);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+    }
+
+    .work-group-header {
+      background-color: var(--primary-color);
+      color: var(--white);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .work-group-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .work-group-id {
+      background-color: var(--white);
+      color: var(--primary-color);
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .work-description {
+      padding: 20px;
+      white-space: pre-line;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .details-card {
+      background-color: var(--white);
+      border-radius: 4px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--box-shadow);
+    }
+
+    .details-card h3 {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .main {
+        margin-left: 0;
+      }
+      .sidebar-toggled .sidebar {
+        transform: translateX(0);
+      }
+      .sidebar-toggled .main {
+        margin-left: var(--sidebar-width);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .form-group {
+        min-width: 100%;
+      }
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Hide elements initially */
+    #dashboardContainer {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="badge">GFSC 24000110790</div>
-    <div id="utcClock">--:--:-- UTC</div>
-  </header>
-
-  <main>
-    <div id="globe" aria-hidden="true"></div>
-
-    <div class="ribbon" role="status" aria-live="polite">
-      <strong>Green:</strong> All systems operational. Last sync 2 min ago.
+  <div id="particles-js"></div>
+  
+  <!-- Login Page -->
+  <div id="loginContainer" class="login-container">
+    <div class="login-box">
+      <div class="login-header">
+        <img src="https://justingps.github.io/dpr/logo.png" alt="Company Logo">
+        <h1>GPS Dashboard</h1>
+        <p>Field Operations Management System</p>
+      </div>
+      
+      <div class="login-body">
+        <div id="loginError" class="alert alert-danger">
+          <i class="fas fa-exclamation-circle"></i> Invalid username or password
+        </div>
+        
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-group">
+            <span class="input-group-prepend">
+              <i class="fas fa-user"></i>
+            </span>
+            <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-group">
+            <span class="input-group-prepend">
+              <i class="fas fa-lock"></i>
+            </span>
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+          </div>
+        </div>
+        
+        <div class="login-options">
+          <div class="custom-checkbox">
+            <input type="checkbox" id="remember">
+            <label for="remember">Remember me</label>
+          </div>
+          <a href="#" style="color: var(--primary-color);">Forgot password?</a>
+        </div>
+        
+        <button id="loginButton" class="btn btn-primary btn-block">LOGIN</button>
+        
+        <div class="login-footer">
+          Gulf Petrochemical Services LLC. © 2023 | All Rights Reserved
+        </div>
+      </div>
     </div>
+  </div>
 
-    <section class="dock">
-      <article class="card">
-        <h3>Employee Center</h3>
-        <div class="kpi">1,247</div>
-        <div class="trend">Active • 12 IDs expiring</div>
-        <a class="link" href="https://justingps.github.io/ems/" aria-label="Open Employee Management System"></a>
-      </article>
-
-      <article class="card">
-        <h3>Work Analytics</h3>
-        <div class="kpi">97 %</div>
-        <div class="trend">Uptime • 42 active WIs</div>
-        <a class="link" href="https://justingps.github.io/gps-oxy/" aria-label="Open Work Analytics Dashboard"></a>
-      </article>
-
-      <article class="card">
-        <h3>Compliance Vault</h3>
-        <div class="kpi">3</div>
-        <div class="trend">New SWP pending approval</div>
-        <a class="link" href="/compliance" aria-label="Open Compliance Vault"></a>
-      </article>
-
-      <article class="card">
-        <h3>Fleet & Assets</h3>
-        <div class="kpi">88 %</div>
-        <div class="trend">Utilization • 2 rigs offline</div>
-        <a class="link" href="/fleet" aria-label="Open Fleet Management"></a>
-      </article>
-    </section>
-  </main>
-
-  <footer>
-    © 2025 Gulf Petrochemical Services LLC – Occidental of Oman Contract
-  </footer>
+  <!-- Dashboard Container -->
+  <div id="dashboardContainer" class="app">
+    <header class="app-header">
+      <div class="logo-container">
+        <img src="https://justingps.github.io/dpr/logo.png" alt="Company Logo" class="logo">
+      </div>
+      <nav class="header-nav">
+        <div class="nav-item">
+          <span id="currentDate" style="font-weight: 500;"></span>
+        </div>
+        <div class="nav-item">
+          <a href="#" id="logoutButton" class="nav-link">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </div>
+      </nav>
+    </header>
+    
+    <div class="app-body">
+      <aside class="sidebar">
+        <nav class="sidebar-nav">
+          <div class="nav-title">Navigation</div>
+          <ul>
+            <li class="nav-item">
+              <a href="#" class="nav-link active" onclick="openTab('summary')">
+                <i class="fas fa-chart-bar"></i> Summary
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="openTab('reports')">
+                <i class="fas fa-file-alt"></i> Reports
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="openTab('status')">
+                <i class="fas fa-table"></i> Status
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link" onclick="openTab('resource')">
+                <i class="fas fa-users"></i> Resource
+              </a>
+            </li>
+          </ul>
+          
+          <div class="nav-title">Contract Info</div>
+          <ul>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-building"></i> Gulf Petrochemical
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-industry"></i> Occidental of Oman
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">
+                <i class="fas fa-file-contract"></i> Contract #24000110790
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      
+      <main class="main">
+        <!-- Summary Tab -->
+        <div id="summary" class="tab-content active">
+          <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></div>
+            <div class="breadcrumb-item active">Summary Dashboard</div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Work Analytics Dashboard</h2>
+              <div class="form-row" style="max-width: 500px;">
+                <div class="form-group">
+                  <label>Start Date</label>
+                  <input type="date" id="summaryStartDate" class="form-control" onchange="updateSummaryCharts()">
+                </div>
+                <div class="form-group">
+                  <label>End Date</label>
+                  <input type="date" id="summaryEndDate" class="form-control" onchange="updateSummaryCharts()">
+                </div>
+              </div>
+            </div>
+            
+            <div id="summaryLoading" class="card-body loading-container">
+              <div class="loading-spinner"></div>
+              <div class="loading-text">Loading Summary Data</div>
+              <div class="loading-subtext">Analyzing work patterns and crew distributions</div>
+            </div>
+            
+            <div id="summaryContent" class="card-body" style="display: none;">
+              <div class="summary-grid">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Daily Crew Allocation by Area</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="crewAllocationChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">Crew Size Trend by Area</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart-container">
+                      <canvas id="crewTrendChart"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Top 5 Work Groups by Crew Utilization</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="chart-container">
+                        <canvas id="workGroupUtilizationChart"></canvas>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-4">
+                  <div class="card">
+                    <div class="card-header">
+                      <h3 class="card-title">Recent Activity</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>Date</th>
+                              <th>Foremen</th>
+                              <th>Crew Size</th>
+                              <th>Status</th>
+                            </tr>
+                          </thead>
+                          <tbody id="recentActivity">
+                            <!-- Will be populated by JavaScript -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+          <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></div>
+            <div class="breadcrumb-item active">Work Reports</div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Work Progress Reports</h2>
+            </div>
+            <div class="card-body">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Date</label>
+                  <input type="date" id="reportDate" class="form-control" onchange="applyFilters()">
+                </div>
+                <div class="form-group">
+                  <label>Area/Block</label>
+                  <select id="areaSelect" class="form-control" onchange="applyFilters()">
+                    <option value="all">All Areas</option>
+                    <option value="Safha (Block-9)">Safha (Block-9)</option>
+                    <option value="Block-62">Block-62</option>
+                    <option value="Other">Other</option>
+                    <option value="Wadi Latham (Block-9)">Wadi Latham (Block-9)</option>
+                    <option value="Infrastructure Project">Infrastructure Project</option>
+                    <option value="Khamila (Bock-27)">Khamila (Bock-27)</option>
+                    <option value="FRT Project">FRT Project</option>
+                    <option value="Power Project">Power Project</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Discipline</label>
+                  <select id="disciplineSelect" class="form-control" onchange="applyFilters()">
+                    <option value="all">All Disciplines</option>
+                    <option value="Piping & Mechanical">Piping & Mechanical</option>
+                    <option value="Electrical">Electrical</option>
+                    <option value="Civil">Civil</option>
+                    <option value="Instrumentation">Instrumentation</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>WI Number</label>
+                  <input type="text" id="wiInput" class="form-control" placeholder="Search WI..." oninput="applyFilters()">
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="reportsLoading" class="card loading-container">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading Report Data</div>
+            <div class="loading-subtext">Please wait while we fetch your reports</div>
+          </div>
+          
+          <div id="reportsContent" style="display: none;">
+            <div id="dailySummaryContainer" class="card">
+              <!-- Daily summary will be displayed here -->
+            </div>
+            
+            <div id="reportContainer">
+              <!-- Data will be displayed here -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- Status Tab -->
+        <div id="status" class="tab-content">
+          <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></div>
+            <div class="breadcrumb-item active">Project Status</div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Active Projects Status</h2>
+              <div class="form-row" style="max-width: 400px;">
+                <div class="form-group">
+                  <label>Select Date</label>
+                  <input type="date" id="statusDate" class="form-control" onchange="updateStatusTable()">
+                </div>
+                <div class="form-group">
+                  <label>Area/Block</label>
+                  <select id="statusAreaSelect" class="form-control" onchange="updateStatusTable()">
+                    <option value="all">All Areas</option>
+                    <option value="Safha (Block-9)">Safha (Block-9)</option>
+                    <option value="Block-62">Block-62</option>
+                    <option value="Other">Other</option>
+                    <option value="Wadi Latham (Block-9)">Wadi Latham (Block-9)</option>
+                    <option value="Infrastructure Project">Infrastructure Project</option>
+                    <option value="Khamila (Bock-27)">Khamila (Bock-27)</option>
+                    <option value="FRT Project">FRT Project</option>
+                    <option value="Power Project">Power Project</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div id="statusLoading" class="card-body loading-container">
+              <div class="loading-spinner"></div>
+              <div class="loading-text">Loading Status Data</div>
+              <div class="loading-subtext">Fetching active projects information</div>
+            </div>
+            
+            <div id="statusContent" class="card-body" style="display: none;">
+              <div class="card">
+                <div class="card-header">
+                  <h3 id="statusTableTitle" class="card-title">Active Projects</h3>
+                </div>
+                <div class="card-body">
+                  <div class="summary-grid">
+                    <div class="summary-item">
+                      <div class="summary-label">Total Projects</div>
+                      <div id="totalProjects" class="summary-value">0</div>
+                    </div>
+                    <div class="summary-item">
+                      <div class="summary-label">Total Crew Size</div>
+                      <div id="totalCrewSize" class="summary-value">0</div>
+                    </div>
+                  </div>
+                  
+                  <div class="table-responsive">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>SL. NO.</th>
+                          <th>ID</th>
+                          <th>CREW LEAD</th>
+                          <th>PROJECTS</th>
+                          <th>AREA</th>
+                          <th>CREW SIZE</th>
+                          <th>DISCIPLINE</th>
+                        </tr>
+                      </thead>
+                      <tbody id="statusTableBody">
+                        <!-- Will be populated by JavaScript -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Resource Tab -->
+        <div id="resource" class="tab-content">
+          <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></div>
+            <div class="breadcrumb-item active">Resource Allocation</div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Resource Allocation</h2>
+              <div class="form-row" style="max-width: 400px;">
+                <div class="form-group">
+                  <label>Select Date</label>
+                  <input type="date" id="resourceDate" class="form-control" onchange="updateResourceTables()">
+                </div>
+                <div class="form-group">
+                  <label>Area/Block</label>
+                  <select id="resourceAreaSelect" class="form-control" onchange="updateResourceTables()">
+                    <option value="all">All Areas</option>
+                    <option value="Safha (Block-9)">Safha (Block-9)</option>
+                    <option value="Block-62">Block-62</option>
+                    <option value="Other">Other</option>
+                    <option value="Wadi Latham (Block-9)">Wadi Latham (Block-9)</option>
+                    <option value="Infrastructure Project">Infrastructure Project</option>
+                    <option value="Khamila (Bock-27)">Khamila (Bock-27)</option>
+                    <option value="FRT Project">FRT Project</option>
+                    <option value="Power Project">Power Project</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div id="resourceLoading" class="card-body loading-container">
+              <div class="loading-spinner"></div>
+              <div class="loading-text">Loading Resource Data</div>
+              <div class="loading-subtext">Fetching resource allocation details</div>
+            </div>
+            
+            <div id="resourceContent" class="card-body" style="display: none;">
+              <div class="card">
+                <div class="card-header">
+                  <h3 id="resourceTableTitle" class="card-title">Resources</h3>
+                </div>
+                <div class="card-body">
+                  <div class="summary-grid">
+                    <div class="summary-item">
+                      <div class="summary-label">Total Manpower</div>
+                      <div id="totalManpower" class="summary-value">0</div>
+                    </div>
+                    <div class="summary-item">
+                      <div class="summary-label">Total Equipment</div>
+                      <div id="totalEquipment" class="summary-value">0</div>
+                    </div>
+                    <div class="summary-item">
+                      <div class="summary-label">Not Found</div>
+                      <div id="totalNotFound" class="summary-value">0</div>
+                    </div>
+                  </div>
+                  
+                  <div class="card mt-4">
+                    <div class="card-header">
+                      <h3 class="card-title">Manpower Resources</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Resource ID</th>
+                              <th>Designation</th>
+                              <th>Project (WI NO)</th>
+                              <th>Area</th>
+                              <th>Foreman</th>
+                            </tr>
+                          </thead>
+                          <tbody id="manpowerTableBody">
+                            <!-- Will be populated by JavaScript -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card mt-4">
+                    <div class="card-header">
+                      <h3 class="card-title">Equipment Resources</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Resource ID</th>
+                              <th>Designation</th>
+                              <th>Project (WI NO)</th>
+                              <th>Area</th>
+                              <th>Foreman</th>
+                            </tr>
+                          </thead>
+                          <tbody id="equipmentTableBody">
+                            <!-- Will be populated by JavaScript -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card mt-4">
+                    <div class="card-header">
+                      <h3 class="card-title">Not Found Resources</h3>
+                    </div>
+                    <div class="card-body">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>#</th>
+                              <th>Resource ID</th>
+                              <th>Designation</th>
+                              <th>Project (WI NO)</th>
+                              <th>Area</th>
+                              <th>Foreman</th>
+                            </tr>
+                          </thead>
+                          <tbody id="notFoundTableBody">
+                            <!-- Will be populated by JavaScript -->
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
 
   <script>
-    // live UTC clock
-    const clock = () => {
-      const now = new Date().toLocaleTimeString('en-GB',{timeZone:'UTC',hour12:false});
-      document.getElementById('utcClock').textContent = `${now} UTC`;
-    };
-    setInterval(clock,1000);
-    clock();
+    // Initialize particles.js
+    particlesJS('particles-js', {
+      particles: {
+        number: { value: 80, density: { enable: true, value_area: 800 } },
+        color: { value: '#ffffff' },
+        shape: { type: 'circle', stroke: { width: 0, color: '#000000' } },
+        opacity: { value: 0.5, random: false },
+        size: { value: 3, random: true },
+        line_linked: {
+          enable: true,
+          distance: 150,
+          color: '#ffffff',
+          opacity: 0.4,
+          width: 1
+        },
+        move: {
+          enable: true,
+          speed: 2,
+          direction: 'none',
+          random: false,
+          straight: false,
+          out_mode: 'out',
+          bounce: false
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: { enable: true, mode: 'grab' },
+          onclick: { enable: true, mode: 'push' },
+          resize: true
+        },
+        modes: {
+          grab: { distance: 140, line_linked: { opacity: 1 } },
+          push: { particles_nb: 4 }
+        }
+      },
+      retina_detect: true
+    });
 
-    // GSAP micro-animations
-    gsap.from('.card',{y:40,opacity:0,duration:.8,stagger:.15,ease:'power2.out'});
+    const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRMvKP4HfM5zZpM3RjdpPcX0DZA3yWpGhXt_lqpzblpbIQW7vcJswPPm8gMdmVZ366FCUwZGLCsF1fb/pub?gid=0&single=true&output=csv';
+    
+    let allData = [];
+    let charts = {};
+    
+    // Start loading data immediately when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+    });
+    
+    // Login functionality
+    const validCredentials = {
+      username: '\x67\x70\x73\x6f\x6d\x61\x6e',
+      password: '\x67\x70\x73\x6f\x6d\x61\x6e'
+    };
+
+    document.getElementById('loginButton').addEventListener('click', () => {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const loginError = document.getElementById('loginError');
+
+      if (username === validCredentials.username && password === validCredentials.password) {
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('dashboardContainer').style.display = 'block';
+        document.getElementById('particles-js').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        loginError.style.display = 'none';
+        
+        // Initialize dashboard after successful login
+        initializeDashboard();
+      } else {
+        loginError.style.display = 'flex';
+      }
+    });
+
+    // Allow Enter key to trigger login
+    document.getElementById('password').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('loginButton').click();
+      }
+    });
+
+    // Logout functionality
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      document.getElementById('dashboardContainer').style.display = 'none';
+      document.getElementById('loginContainer').style.display = 'flex';
+      document.getElementById('particles-js').style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('loginError').style.display = 'none';
+    });
+
+    function initializeDashboard() {
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(today.getDate() - 1);
+      const oneWeekAgo = new Date(yesterday);
+      oneWeekAgo.setDate(yesterday.getDate() - 20); // One week range ending yesterday
+      
+      document.getElementById('reportDate').valueAsDate = yesterday;
+      document.getElementById('statusDate').valueAsDate = yesterday;
+      document.getElementById('resourceDate').valueAsDate = yesterday;
+      document.getElementById('summaryStartDate').valueAsDate = oneWeekAgo;
+      document.getElementById('summaryEndDate').valueAsDate = yesterday;
+      document.getElementById('currentDate').textContent = formatDateForDisplay(today);
+      
+      // If data is already preloaded, show it immediately
+      if (allData.length > 0) {
+        document.getElementById('summaryLoading').style.display = 'none';
+        document.getElementById('summaryContent').style.display = 'block';
+        document.getElementById('reportsLoading').style.display = 'none';
+        document.getElementById('reportsContent').style.display = 'block';
+        document.getElementById('statusLoading').style.display = 'none';
+        document.getElementById('statusContent').style.display = 'block';
+        document.getElementById('resourceLoading').style.display = 'none';
+        document.getElementById('resourceContent').style.display = 'block';
+        
+        applyFilters();
+        if (document.getElementById('status').classList.contains('active')) {
+          updateStatusTable();
+        }
+        if (document.getElementById('summary').classList.contains('active')) {
+          updateSummaryCharts();
+        }
+        if (document.getElementById('resource').classList.contains('active')) {
+          updateResourceTables();
+        }
+      } else {
+        // If data isn't preloaded yet, show loading indicators
+        document.getElementById('summaryLoading').style.display = 'flex';
+        document.getElementById('reportsLoading').style.display = 'flex';
+        document.getElementById('statusLoading').style.display = 'flex';
+        document.getElementById('resourceLoading').style.display = 'flex';
+      }
+    }
+    
+    function openTab(tabName) {
+      const tabContents = document.getElementsByClassName('tab-content');
+      for (let i = 0; i < tabContents.length; i++) {
+        tabContents[i].classList.remove('active');
+      }
+      
+      const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+      for (let i = 0; i < navLinks.length; i++) {
+        navLinks[i].classList.remove('active');
+      }
+      
+      document.getElementById(tabName).classList.add('active');
+      event.currentTarget.classList.add('active');
+      
+      if (tabName === 'summary' && allData.length > 0) {
+        updateSummaryCharts();
+      } else if (tabName === 'status' && allData.length > 0) {
+        updateStatusTable();
+      } else if (tabName === 'resource' && allData.length > 0) {
+        updateResourceTables();
+      }
+    }
+    
+    function formatDateForDisplay(date) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const day = date.getDate();
+      const month = months[date.getMonth()];
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+    
+    function loadData() {
+      fetch(SHEET_URL)
+        .then(response => response.text())
+        .then(csvData => {
+          allData = parseCSV(csvData);
+          
+          // If user is already logged in (unlikely but possible), update the dashboard
+          if (document.getElementById('dashboardContainer').style.display === 'block') {
+            document.getElementById('summaryLoading').style.display = 'none';
+            document.getElementById('summaryContent').style.display = 'block';
+            document.getElementById('reportsLoading').style.display = 'none';
+            document.getElementById('reportsContent').style.display = 'block';
+            document.getElementById('statusLoading').style.display = 'none';
+            document.getElementById('statusContent').style.display = 'block';
+            document.getElementById('resourceLoading').style.display = 'none';
+            document.getElementById('resourceContent').style.display = 'block';
+            
+            applyFilters();
+            if (document.getElementById('status').classList.contains('active')) {
+              updateStatusTable();
+            }
+            if (document.getElementById('summary').classList.contains('active')) {
+              updateSummaryCharts();
+            }
+            if (document.getElementById('resource').classList.contains('active')) {
+              updateResourceTables();
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error loading data:', error);
+          // If user is logged in, show error messages
+          if (document.getElementById('dashboardContainer').style.display === 'block') {
+            document.getElementById('reportContainer').innerHTML = 
+              '<p class="no-data">Error loading data. Please try again later.</p>';
+            document.getElementById('statusTableBody').innerHTML = 
+              '<tr><td colspan="7" class="no-data">Error loading data. Please try again later.</td></tr>';
+            document.getElementById('manpowerTableBody').innerHTML = 
+              '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
+            document.getElementById('equipmentTableBody').innerHTML = 
+              '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
+            document.getElementById('notFoundTableBody').innerHTML = 
+              '<tr><td colspan="6" class="no-data">Error loading data. Please try again later.</td></tr>';
+            
+            document.getElementById('summaryLoading').style.display = 'none';
+            document.getElementById('reportsLoading').style.display = 'none';
+            document.getElementById('statusLoading').style.display = 'none';
+            document.getElementById('resourceLoading').style.display = 'none';
+            document.getElementById('summaryContent').style.display = 'block';
+            document.getElementById('reportsContent').style.display = 'block';
+            document.getElementById('statusContent').style.display = 'block';
+            document.getElementById('resourceContent').style.display = 'block';
+          }
+        });
+    }
+    
+    function parseCSV(csv) {
+      const lines = [];
+      let currentLine = [];
+      let inQuotes = false;
+      let currentField = '';
+      
+      for (let i = 0; i < csv.length; i++) {
+        const char = csv[i];
+        
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          currentLine.push(currentField.trim());
+          currentField = '';
+        } else if (char === '\n' && !inQuotes) {
+          currentLine.push(currentField.trim());
+          lines.push(currentLine);
+          currentLine = [];
+          currentField = '';
+        } else {
+          currentField += char;
+        }
+      }
+      
+      if (currentField.trim() !== '' || currentLine.length > 0) {
+        currentLine.push(currentField.trim());
+        lines.push(currentLine);
+      }
+      
+      if (lines.length === 0) return [];
+      
+      const headers = lines[0];
+      const result = [];
+      
+      for (let i = 1; i < lines.length; i++) {
+        const obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j]] = lines[i][j] || '';
+        }
+        result.push(obj);
+      }
+      
+      return result;
+    }
+    
+    function parseSheetDate(dateString) {
+      if (!dateString) return null;
+      
+      const months = {
+        'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+        'Jul': 6, 'Aug': 7, 'Sep': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+      };
+      
+      const mmmFormat = dateString.match(/^(\d{1,2})-([A-Za-z]{3})-(\d{4})$/);
+      if (mmmFormat) {
+        const day = parseInt(mmmFormat[1], 10);
+        const month = months[mmmFormat[2]];
+        const year = parseInt(mmmFormat[3], 10);
+        return new Date(year, month, day);
+      }
+      
+      const yyyyFormat = dateString.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (yyyyFormat) {
+        const year = parseInt(yyyyFormat[1], 10);
+        const month = parseInt(yyyyFormat[2], 10) - 1;
+        const day = parseInt(yyyyFormat[3], 10);
+        return new Date(year, month, day);
+      }
+      
+      const ddmmFormat = dateString.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (ddmmFormat) {
+        const day = parseInt(ddmmFormat[1], 10);
+        const month = parseInt(ddmmFormat[2], 10) - 1;
+        const year = parseInt(ddmmFormat[3], 10);
+        return new Date(year, month, day);
+      }
+      
+      return null;
+    }
+    
+    function formatDateForComparison(date) {
+      if (!date) return '';
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    
+    function groupDataByProject(data, dateKey, areaFilter = 'all', disciplineFilter = 'all', wiFilter = '') {
+      const grouped = {};
+      const uniqueCrewIds = new Set();
+      
+      data.forEach(row => {
+        const rowDate = parseSheetDate(row.DATE);
+        if (!rowDate) return;
+        
+        const formattedRowDate = formatDateForComparison(rowDate);
+        if (formattedRowDate !== dateKey) return;
+        
+        if (areaFilter !== 'all' && row['AREA / BLOCK'] !== areaFilter) return;
+        if (disciplineFilter !== 'all' && row['DISCIPLINE'] !== disciplineFilter) return;
+        if (wiFilter && row['WI NO'] && !row['WI NO'].toLowerCase().includes(wiFilter.toLowerCase())) return;
+        
+        const key = `${row['FOREMAN ID']}|${row['WI NO']}|${row['AREA / BLOCK']}|${row['DISCIPLINE']}`;
+        if (!grouped[key]) {
+          grouped[key] = {
+            id: row['FOREMAN ID'] || '-',
+            crewLead: row['FOREMAN NAME'] || '-',
+            projects: row['WI NO'] || '-',
+            area: row['AREA / BLOCK'] || 'Unknown',
+            discipline: row['DISCIPLINE'] || '-',
+            permits: new Set(),
+            resources: new Set(),
+            foremen: new Set(),
+            details: {
+              'DESCRIPTION OF WORK': row['DESCRIPTION OF WORK'] || '',
+              'PERMIT NUMBER': row['PERMIT NUMBER'] || '',
+              'VALIDATION TIME': row['VALIDATION TIME'] || '',
+              'SUSPENSION TIME': row['SUSPENSION TIME'] || '',
+              'PROGRESS': row['PROGRESS'] || ''
+            },
+            resourceDetails: []
+          };
+        }
+        
+        if (row['PERMIT NUMBER']) {
+          grouped[key].permits.add(row['PERMIT NUMBER']);
+        }
+        
+        if (row['RESOURCE ID']) {
+          grouped[key].resources.add(row['RESOURCE ID']);
+          uniqueCrewIds.add(row['RESOURCE ID']);
+          grouped[key].resourceDetails.push({
+            'RESOURCE ID': row['RESOURCE ID'],
+            'RESOURCE DESIGNATION': row['RESOURCE DESIGNATION'] || '-',
+            'MANPOWER / EQUIPMENT': row['MANPOWER / EQUIPMENT'] || '',
+            'TIME-IN': row['TIME-IN'] || '-',
+            'TIME-OUT': row['TIME-OUT'] || '-'
+          });
+        }
+        
+        if (row['FOREMAN ID']) {
+          grouped[key].foremen.add(row['FOREMAN ID']);
+        }
+      });
+      
+      return { grouped, totalCrewSize: uniqueCrewIds.size };
+    }
+    
+    function applyFilters() {
+      const selectedDate = document.getElementById('reportDate').valueAsDate;
+      const selectedArea = document.getElementById('areaSelect').value;
+      const selectedDiscipline = document.getElementById('disciplineSelect').value;
+      const wiSearch = document.getElementById('wiInput').value.trim();
+      
+      if (!selectedDate) return;
+      
+      const formattedSelectedDate = formatDateForComparison(selectedDate);
+      
+      const filteredData = allData.filter(row => {
+        if (!row.DATE) return false;
+        
+        const rowDate = parseSheetDate(row.DATE);
+        if (!rowDate) return false;
+        const formattedRowDate = formatDateForComparison(rowDate);
+        if (formattedRowDate !== formattedSelectedDate) return false;
+        
+        if (selectedArea !== 'all' && row['AREA / BLOCK'] !== selectedArea) return false;
+        if (selectedDiscipline !== 'all' && row['DISCIPLINE'] !== selectedDiscipline) return false;
+        if (wiSearch && row['WI NO'] && !row['WI NO'].toLowerCase().includes(wiSearch.toLowerCase())) return false;
+        
+        return true;
+      });
+      
+      displayData(filteredData, formattedSelectedDate, selectedArea, selectedDiscipline, wiSearch);
+    }
+    
+    function displayData(data, dateKey, selectedArea, selectedDiscipline, wiSearch) {
+      const container = document.getElementById('reportContainer');
+      const summaryContainer = document.getElementById('dailySummaryContainer');
+      
+      if (data.length === 0) {
+        container.innerHTML = '<p class="no-data">No records found for the selected filters.</p>';
+        summaryContainer.innerHTML = '';
+        return;
+      }
+      
+      const { grouped, totalCrewSize } = groupDataByProject(data, dateKey, selectedArea, selectedDiscipline, wiSearch);
+      
+      const areaSummary = {};
+      Object.values(grouped).forEach(group => {
+        const area = group.area;
+        if (!areaSummary[area]) {
+          areaSummary[area] = {
+            permits: new Set(),
+            crewSize: new Set(),
+            foremen: new Set()
+          };
+        }
+        
+        group.permits.forEach(permit => areaSummary[area].permits.add(permit));
+        group.resources.forEach(crew => areaSummary[area].crewSize.add(crew));
+        group.foremen.forEach(foreman => areaSummary[area].foremen.add(foreman));
+      });
+      
+      const selectedDate = document.getElementById('reportDate').valueAsDate;
+      const formattedDate = formatDateForDisplay(selectedDate);
+      
+      let summaryHtml = `
+        <div class="card-header">
+          <h3 class="card-title">Daily Summary for ${formattedDate}</h3>
+        </div>
+        <div class="card-body">
+          <div class="summary-grid">
+      `;
+      
+      Object.entries(areaSummary).forEach(([area, stats]) => {
+        summaryHtml += `
+          <div class="summary-item">
+            <div class="summary-label">${area}</div>
+            <div class="summary-value">${stats.crewSize.size} Crew</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+              <div>
+                <small class="text-muted">Permits</small>
+                <div>${stats.permits.size}</div>
+              </div>
+              <div>
+                <small class="text-muted">Foremen</small>
+                <div>${stats.foremen.size}</div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      const totalPermits = Object.values(areaSummary).reduce((sum, area) => sum + area.permits.size, 0);
+      const totalForemen = Object.values(areaSummary).reduce((sum, area) => sum + area.foremen.size, 0);
+      
+      summaryHtml += `
+          <div class="summary-item" style="background-color: #dbeafe;">
+            <div class="summary-label">TOTAL</div>
+            <div class="summary-value">${totalCrewSize} Crew</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+              <div>
+                <small class="text-muted">Permits</small>
+                <div>${totalPermits}</div>
+              </div>
+              <div>
+                <small class="text-muted">Foremen</small>
+                <div>${totalForemen}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      `;
+      
+      summaryContainer.innerHTML = summaryHtml;
+      
+      let html = '';
+      let groupCounter = 1;
+      
+      Object.values(grouped).forEach(group => {
+        const manpowerCount = group.resourceDetails.filter(r => 
+          r['MANPOWER / EQUIPMENT'].toLowerCase() === 'manpower'
+        ).length;
+        
+        const equipmentCount = group.resourceDetails.filter(r => 
+          r['MANPOWER / EQUIPMENT'].toLowerCase() === 'equipment'
+        ).length;
+        
+        const progressLines = group.details['PROGRESS'].replace(/"/g, '').split('\n').map(line => {
+          const [description, unit] = line.split(' = ');
+          return { description, unit };
+        });
+        
+        html += `
+          <div class="work-group">
+            <div class="work-group-header">
+              <span class="work-group-title">Work Progress Report - Group #${groupCounter}</span>
+              <span class="work-group-id">WI NO: ${group.projects}</span>
+            </div>
+            
+            <div class="work-description">${group.details['DESCRIPTION OF WORK'].replace(/"/g, '')}</div>
+            
+            <div class="card-body">
+              <div class="summary-grid">
+                <div class="summary-item">
+                  <div class="summary-label">Foreman ID</div>
+                  <div class="summary-value">${group.id}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Foreman Name</div>
+                  <div class="summary-value">${group.crewLead}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Area/Block</div>
+                  <div class="summary-value">${group.area}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Permit Number</div>
+                  <div class="summary-value">${group.details['PERMIT NUMBER']}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Work Hours</div>
+                  <div class="summary-value">${group.details['VALIDATION TIME']} to ${group.details['SUSPENSION TIME']}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Manpower</div>
+                  <div class="summary-value">${manpowerCount}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Equipment</div>
+                  <div class="summary-value">${equipmentCount}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Crew Size</div>
+                  <div class="summary-value">${group.resources.size}</div>
+                </div>
+                <div class="summary-item">
+                  <div class="summary-label">Discipline</div>
+                  <div class="summary-value">${group.discipline}</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card mt-3">
+              <div class="card-header">
+                <h3 class="card-title">Progress Details</h3>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${progressLines.map((line, index) => `
+                        <tr>
+                          <td>${index + 1}</td>
+                          <td>${line.description || '-'}</td>
+                          <td>${line.unit || '-'}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card mt-3">
+              <div class="card-header">
+                <h3 class="card-title">Resource Details</h3>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>Resource ID</th>
+                        <th>Designation</th>
+                        <th>Type</th>
+                        <th>Time-In</th>
+                        <th>Time-Out</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${group.resourceDetails.map((resource, index) => `
+                        <tr>
+                          <td>${index + 1}</td>
+                          <td>${resource['RESOURCE ID']}</td>
+                          <td>${resource['RESOURCE DESIGNATION']}</td>
+                          <td>${resource['MANPOWER / EQUIPMENT']}</td>
+                          <td>${resource['TIME-IN']}</td>
+                          <td>${resource['TIME-OUT']}</td>
+                        </tr>
+                      `).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        groupCounter++;
+      });
+      
+      container.innerHTML = html;
+    }
+    
+    function updateSummaryCharts() {
+      if (allData.length === 0) return;
+      
+      const startDate = document.getElementById('summaryStartDate').valueAsDate;
+      const endDate = document.getElementById('summaryEndDate').valueAsDate;
+      
+      if (!startDate || !endDate) return;
+      
+      const datesInRange = getDatesInRange(startDate, endDate);
+      const areaCrewData = {};
+      const areaTrendData = {};
+      const workGroupData = {};
+      const recentActivityData = {};
+      
+      datesInRange.forEach(date => {
+        const dateKey = formatDateForComparison(date);
+        areaTrendData[dateKey] = {};
+        recentActivityData[dateKey] = {
+          date: dateKey,
+          foremen: new Set(),
+          crewSize: new Set(),
+          active: false
+        };
+        
+        const { grouped } = groupDataByProject(allData, dateKey);
+        
+        Object.values(grouped).forEach(group => {
+          const area = group.area;
+          if (!areaCrewData[area]) {
+            areaCrewData[area] = {
+              totalCrew: 0,
+              dates: {},
+              foremen: new Set()
+            };
+          }
+          if (!areaCrewData[area].dates[dateKey]) {
+            areaCrewData[area].dates[dateKey] = {
+              crewSize: new Set(),
+              foremen: new Set()
+            };
+          }
+          
+          group.resources.forEach(crew => {
+            areaCrewData[area].dates[dateKey].crewSize.add(crew);
+            recentActivityData[dateKey].crewSize.add(crew);
+          });
+          group.foremen.forEach(foreman => {
+            areaCrewData[area].dates[dateKey].foremen.add(foreman);
+            areaCrewData[area].foremen.add(foreman);
+            recentActivityData[dateKey].foremen.add(foreman);
+          });
+          
+          if (!areaTrendData[dateKey][area]) {
+            areaTrendData[dateKey][area] = 0;
+          }
+          areaTrendData[dateKey][area] += group.resources.size;
+          
+          const workGroupKey = `${group.projects} - ${area}`;
+          if (!workGroupData[workGroupKey]) {
+            workGroupData[workGroupKey] = {
+              crewSize: new Set(),
+              area: area,
+              wiNo: group.projects
+            };
+          }
+          group.resources.forEach(crew => workGroupData[workGroupKey].crewSize.add(crew));
+          
+          recentActivityData[dateKey].active = true;
+        });
+      });
+      
+      const crewAllocationLabels = datesInRange.map(date => formatDateForDisplay(date));
+      const crewAllocationDatasets = [];
+      
+      const areasByCrewSize = Object.keys(areaCrewData)
+        .map(area => ({
+          name: area,
+          total: Object.keys(areaCrewData[area].dates)
+            .reduce((sum, date) => sum + areaCrewData[area].dates[date].crewSize.size, 0)
+        }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 5);
+      
+      const colors = [
+        'rgba(32, 168, 216, 0.8)',
+        'rgba(77, 189, 116, 0.8)',
+        'rgba(255, 193, 7, 0.8)',
+        'rgba(248, 108, 107, 0.8)',
+        'rgba(99, 194, 222, 0.8)'
+      ];
+      
+      areasByCrewSize.forEach((area, index) => {
+        const areaData = datesInRange.map(date => {
+          const dateKey = formatDateForComparison(date);
+          return areaCrewData[area.name].dates[dateKey] ? 
+            areaCrewData[area.name].dates[dateKey].crewSize.size : 0;
+        });
+        
+        crewAllocationDatasets.push({
+          label: area.name,
+          data: areaData,
+          backgroundColor: colors[index],
+          borderColor: colors[index],
+          borderWidth: 1
+        });
+      });
+      
+      const trendLabels = datesInRange.map(date => formatDateForDisplay(date));
+      const trendDatasets = [];
+      
+      areasByCrewSize.forEach((area, index) => {
+        const trendData = datesInRange.map(date => {
+          const dateKey = formatDateForComparison(date);
+          return areaTrendData[dateKey][area.name] || 0;
+        });
+        
+        trendDatasets.push({
+          label: area.name,
+          data: trendData,
+          borderColor: colors[index],
+          backgroundColor: colors[index],
+          borderWidth: 2,
+          tension: 0.3,
+          fill: false
+        });
+      });
+      
+      const workGroupLabels = [];
+      const workGroupDatasets = [];
+      const topWorkGroups = Object.keys(workGroupData)
+        .map(group => ({
+          name: group,
+          total: workGroupData[group].crewSize.size
+        }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 5);
+      
+      const workGroupDataValues = topWorkGroups.map(group => group.total);
+      workGroupLabels.push(...topWorkGroups.map(group => group.name));
+      
+      workGroupDatasets.push({
+        label: 'Crew Utilization',
+        data: workGroupDataValues,
+        backgroundColor: colors,
+        borderColor: colors,
+        borderWidth: 1
+      });
+      
+      const recentActivityHtml = Object.values(recentActivityData)
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .map(day => `
+          <tr>
+            <td>${formatDateForDisplay(new Date(day.date))}</td>
+            <td>${day.foremen.size}</td>
+            <td>${day.crewSize.size}</td>
+            <td><span class="status-indicator ${day.active ? 'status-active' : 'status-inactive'}"></span>
+              ${day.active ? 'Active' : 'No Activity'}</td>
+          </tr>
+        `).join('');
+      document.getElementById('recentActivity').innerHTML = recentActivityHtml;
+      
+      if (charts.crewAllocationChart) charts.crewAllocationChart.destroy();
+      if (charts.crewTrendChart) charts.crewTrendChart.destroy();
+      if (charts.workGroupUtilizationChart) charts.workGroupUtilizationChart.destroy();
+      
+      const ctx1 = document.getElementById('crewAllocationChart').getContext('2d');
+      charts.crewAllocationChart = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+          labels: crewAllocationLabels,
+          datasets: crewAllocationDatasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              stacked: true,
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Crew Size'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+            }
+          }
+        }
+      });
+      
+      const ctx2 = document.getElementById('crewTrendChart').getContext('2d');
+      charts.crewTrendChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: trendLabels,
+          datasets: trendDatasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Crew Size'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+            }
+          }
+        }
+      });
+      
+      const ctx3 = document.getElementById('workGroupUtilizationChart').getContext('2d');
+      charts.workGroupUtilizationChart = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+          labels: workGroupLabels,
+          datasets: workGroupDatasets
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Work Group'
+              }
+            },
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Total Crew Utilization'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+            }
+          }
+        }
+      });
+    }
+
+    function updateStatusTable() {
+      const selectedDate = document.getElementById('statusDate').valueAsDate;
+      const selectedArea = document.getElementById('statusAreaSelect').value;
+      if (!selectedDate) return;
+
+      const formattedSelectedDate = formatDateForComparison(selectedDate);
+      const formattedDisplayDate = formatDateForDisplay(selectedDate);
+
+      document.getElementById('statusTableTitle').textContent = `Active Projects on ${formattedDisplayDate}`;
+
+      const { grouped, totalCrewSize } = groupDataByProject(allData, formattedSelectedDate, selectedArea);
+
+      if (Object.keys(grouped).length === 0) {
+        document.getElementById('totalProjects').textContent = '0';
+        document.getElementById('totalCrewSize').textContent = '0';
+        document.getElementById('statusTableBody').innerHTML = 
+          '<tr><td colspan="7" class="no-data">No records found for the selected date and area.</td></tr>';
+        return;
+      }
+
+      const statusData = Object.values(grouped).map((group, index) => ({
+        slNo: index + 1,
+        id: group.id,
+        crewLead: group.crewLead,
+        projects: group.projects,
+        area: group.area,
+        crewSize: group.resources.size,
+        discipline: group.discipline
+      }));
+
+      document.getElementById('totalProjects').textContent = statusData.length;
+      document.getElementById('totalCrewSize').textContent = totalCrewSize;
+
+      const statusHtml = statusData.map(item => `
+        <tr>
+          <td>${item.slNo}</td>
+          <td>${item.id}</td>
+          <td>${item.crewLead}</td>
+          <td>${item.projects}</td>
+          <td>${item.area}</td>
+          <td>${item.crewSize}</td>
+          <td>${item.discipline}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('statusTableBody').innerHTML = statusHtml;
+    }
+    
+    function updateResourceTables() {
+      const selectedDate = document.getElementById('resourceDate').valueAsDate;
+      const selectedArea = document.getElementById('resourceAreaSelect').value;
+      if (!selectedDate) return;
+
+      const formattedSelectedDate = formatDateForComparison(selectedDate);
+      const formattedDisplayDate = formatDateForDisplay(selectedDate);
+
+      document.getElementById('resourceTableTitle').textContent = `Resources on ${formattedDisplayDate}`;
+
+      const { grouped } = groupDataByProject(allData, formattedSelectedDate, selectedArea);
+
+      if (Object.keys(grouped).length === 0) {
+        document.getElementById('totalManpower').textContent = '0';
+        document.getElementById('totalEquipment').textContent = '0';
+        document.getElementById('totalNotFound').textContent = '0';
+        document.getElementById('manpowerTableBody').innerHTML = 
+          '<tr><td colspan="6" class="no-data">No manpower records found.</td></tr>';
+        document.getElementById('equipmentTableBody').innerHTML = 
+          '<tr><td colspan="6" class="no-data">No equipment records found.</td></tr>';
+        document.getElementById('notFoundTableBody').innerHTML = 
+          '<tr><td colspan="6" class="no-data">No not found records found.</td></tr>';
+        return;
+      }
+
+      let manpowerResources = [];
+      let equipmentResources = [];
+      let notFoundResources = [];
+      let manpowerCount = 0;
+      let equipmentCount = 0;
+      let notFoundCount = 0;
+
+      Object.values(grouped).forEach(group => {
+        group.resourceDetails.forEach(resource => {
+          const resourceEntry = {
+            resourceId: resource['RESOURCE ID'],
+            designation: resource['RESOURCE DESIGNATION'],
+            project: group.projects,
+            area: group.area,
+            foreman: group.crewLead
+          };
+
+          const type = resource['MANPOWER / EQUIPMENT'].toLowerCase();
+          if (type === 'manpower') {
+            manpowerResources.push(resourceEntry);
+            manpowerCount++;
+          } else if (type === 'equipment') {
+            equipmentResources.push(resourceEntry);
+            equipmentCount++;
+          } else {
+            notFoundResources.push(resourceEntry);
+            notFoundCount++;
+          }
+        });
+      });
+
+      document.getElementById('totalManpower').textContent = manpowerCount;
+      document.getElementById('totalEquipment').textContent = equipmentCount;
+      document.getElementById('totalNotFound').textContent = notFoundCount;
+
+      const manpowerHtml = manpowerResources.map((resource, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${resource.resourceId}</td>
+          <td>${resource.designation}</td>
+          <td>${resource.project}</td>
+          <td>${resource.area}</td>
+          <td>${resource.foreman}</td>
+        </tr>
+      `).join('');
+
+      const equipmentHtml = equipmentResources.map((resource, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${resource.resourceId}</td>
+          <td>${resource.designation}</td>
+          <td>${resource.project}</td>
+          <td>${resource.area}</td>
+          <td>${resource.foreman}</td>
+        </tr>
+      `).join('');
+
+      const notFoundHtml = notFoundResources.map((resource, index) => `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${resource.resourceId}</td>
+          <td>${resource.designation}</td>
+          <td>${resource.project}</td>
+          <td>${resource.area}</td>
+          <td>${resource.foreman}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('manpowerTableBody').innerHTML = manpowerHtml || 
+        '<tr><td colspan="6" class="no-data">No manpower records found.</td></tr>';
+      document.getElementById('equipmentTableBody').innerHTML = equipmentHtml || 
+        '<tr><td colspan="6" class="no-data">No equipment records found.</td></tr>';
+      document.getElementById('notFoundTableBody').innerHTML = notFoundHtml || 
+        '<tr><td colspan="6" class="no-data">No not found records found.</td></tr>';
+    }
+    
+    function getDatesInRange(startDate, endDate) {
+      const dates = [];
+      let currentDate = new Date(startDate);
+      
+      while (currentDate <= endDate) {
+        dates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      
+      return dates;
+    }
+    
+    function getLastNDays(n) {
+      const dates = [];
+      for (let i = n - 1; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        dates.push(formatDateForComparison(date));
+      }
+      return dates;
+    }
+    
+    function parseTime(timeString) {
+      if (!timeString) return null;
+      
+      const match = timeString.match(/^(\d{1,2}):(\d{2})$/);
+      if (!match) return null;
+      
+      const hours = parseInt(match[1], 10);
+      const minutes = parseInt(match[2], 10);
+      
+      const date = new Date();
+      date.setHours(hours, minutes, 0, 0);
+      return date;
+    }
   </script>
 </body>
 </html>
