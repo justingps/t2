@@ -1,145 +1,808 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Google Sheets CRUD</title>
-  <style>
-    body {
-      font-family: Arial;
-      padding: 20px;
-      background: #f5f7fa;
-    }
-    h2 { text-align: center; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sheets Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --surface: #16181c;
+    --border: #2a2d35;
+    --accent: #c8f060;
+    --accent-dim: #9ab848;
+    --text: #e8eaf0;
+    --muted: #6b7080;
+    --danger: #ff6b6b;
+    --info: #60b4f0;
+    --success: #60f0a8;
+    --row-hover: #1e2128;
+    --editing: #1a2010;
+  }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: white;
-    }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    th, td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: center;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-    th {
-      background: #4CAF50;
-      color: white;
-    }
+  /* ── SETUP OVERLAY ── */
+  #setup-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+  }
+  #setup-overlay.hidden { display: none; }
 
-    input {
-      padding: 6px;
-      width: 90%;
-    }
+  .setup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    max-width: 560px;
+    width: 90%;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.6);
+  }
 
-    button {
-      padding: 6px 12px;
-      margin: 3px;
-      cursor: pointer;
-    }
+  .setup-card h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--accent);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+  .setup-card p {
+    color: var(--muted);
+    margin-bottom: 32px;
+    line-height: 1.6;
+    font-size: 13px;
+  }
 
-    .add-form {
-      margin-top: 20px;
-      text-align: center;
-    }
-  </style>
+  .steps {
+    counter-reset: step;
+    margin-bottom: 32px;
+  }
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+  }
+  .step-num {
+    counter-increment: step;
+    width: 28px; height: 28px;
+    background: var(--accent);
+    color: #000;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .step-content { flex: 1; }
+  .step-title { color: var(--text); font-weight: 500; margin-bottom: 4px; }
+  .step-desc { color: var(--muted); font-size: 12px; line-height: 1.5; }
+  .step-desc code {
+    background: var(--bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+  }
+
+  .field-group { margin-bottom: 16px; }
+  .field-label {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .field-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: border-color 0.2s;
+    outline: none;
+  }
+  .field-input:focus { border-color: var(--accent); }
+  .field-input::placeholder { color: var(--muted); }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { background: #d9ff70; transform: translateY(-1px); }
+
+  /* ── MAIN APP ── */
+  #app { display: none; flex-direction: column; min-height: 100vh; }
+  #app.visible { display: flex; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0;
+    background: rgba(14,15,17,0.95);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-mark {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #000;
+    font-size: 18px;
+  }
+  .logo-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+  }
+  .logo-sub { color: var(--muted); font-size: 11px; margin-top: 1px; }
+
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: 1px solid transparent;
+    display: flex; align-items: center; gap: 8px;
+    white-space: nowrap;
+  }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: var(--muted); background: var(--surface); }
+  .btn-accent { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 500; }
+  .btn-accent:hover { background: #d9ff70; }
+  .btn-ghost { background: transparent; color: var(--muted); border: none; padding: 8px; }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-danger { background: transparent; border-color: var(--danger); color: var(--danger); }
+  .btn-danger:hover { background: rgba(255,107,107,0.1); }
+
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    display: inline-block;
+  }
+  .status-dot.ok { background: var(--success); box-shadow: 0 0 8px var(--success); }
+  .status-dot.err { background: var(--danger); }
+  .status-dot.loading { background: var(--info); animation: pulse 1s infinite; }
+
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  main { flex: 1; padding: 32px 40px; }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .record-count {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .record-count span { color: var(--text); font-weight: 500; }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  th:first-child { width: 48px; color: var(--border); }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--row-hover); }
+  tbody tr.editing { background: var(--editing) !important; }
+  tbody tr.new-row { background: rgba(200,240,96,0.04); }
+
+  td {
+    padding: 14px 20px;
+    vertical-align: middle;
+  }
+  td:first-child { color: var(--muted); font-size: 12px; }
+
+  .cell-view { display: block; }
+  .cell-edit { display: none; }
+
+  tr.editing .cell-view { display: none; }
+  tr.editing .cell-edit { display: block; }
+
+  .inline-input {
+    background: var(--bg);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    width: 100%;
+    outline: none;
+    min-width: 120px;
+  }
+  .inline-input:focus { box-shadow: 0 0 0 3px rgba(200,240,96,0.15); }
+
+  .cell-actions { display: flex; gap: 6px; align-items: center; }
+  .icon-btn {
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+  .icon-btn:hover { color: var(--text); background: var(--surface); border-color: var(--border); }
+  .icon-btn.save-btn { color: var(--accent); }
+  .icon-btn.save-btn:hover { background: rgba(200,240,96,0.1); border-color: var(--accent); }
+  .icon-btn.del-btn:hover { color: var(--danger); border-color: var(--danger); background: rgba(255,107,107,0.08); }
+
+  .save-actions { display: none; gap: 6px; }
+  tr.editing .save-actions { display: flex; }
+  tr.editing .edit-actions { display: none; }
+  .edit-actions { display: flex; gap: 6px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.4; }
+  .empty-text { font-size: 16px; margin-bottom: 8px; color: var(--text); }
+  .empty-sub { font-size: 13px; }
+
+  /* ── TOAST ── */
+  #toast-container {
+    position: fixed;
+    bottom: 32px; right: 32px;
+    display: flex; flex-direction: column; gap: 10px;
+    z-index: 9999;
+  }
+  .toast {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: flex; align-items: center; gap: 10px;
+    animation: slideIn 0.25s ease;
+    max-width: 320px;
+  }
+  .toast.success { border-color: var(--success); }
+  .toast.error   { border-color: var(--danger);  }
+  .toast.info    { border-color: var(--info);    }
+  @keyframes slideIn {
+    from { transform: translateX(40px); opacity:0; }
+    to   { transform: translateX(0);   opacity:1; }
+  }
+
+  /* ── INSTRUCTIONS PANEL ── */
+  .info-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(96,180,240,0.07);
+    border: 1px solid rgba(96,180,240,0.2);
+    border-radius: 10px;
+    padding: 14px 20px;
+    margin-bottom: 24px;
+    font-size: 12px;
+    color: var(--info);
+    line-height: 1.6;
+  }
+  .info-bar svg { flex-shrink: 0; }
+  .info-bar a { color: var(--accent); text-decoration: none; }
+  .info-bar a:hover { text-decoration: underline; }
+
+  /* spinner */
+  .spin {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .sheet-id-display {
+    color: var(--muted); font-size: 11px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .reset-btn {
+    color: var(--muted); font-size: 11px;
+    cursor: pointer; text-decoration: underline;
+    background: none; border: none; font-family: inherit;
+  }
+  .reset-btn:hover { color: var(--danger); }
+</style>
 </head>
-
 <body>
 
-<h2>Google Sheets Manager</h2>
+<!-- ══════════════ SETUP OVERLAY ══════════════ -->
+<div id="setup-overlay">
+  <div class="setup-card">
+    <h1>Sheets Manager</h1>
+    <p>Connect your Google Sheet in 3 quick steps — no API keys needed.</p>
 
-<button onclick="loadData()">🔄 Refresh</button>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Create your Google Sheet</div>
+          <div class="step-desc">
+            Open <a href="https://sheets.google.com" target="_blank" style="color:var(--accent)">Google Sheets</a> and make a new sheet. In row 1 add headers: <code>Name</code> &nbsp;<code>Date</code> &nbsp;<code>Remark</code>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Publish the sheet to the web</div>
+          <div class="step-desc">
+            <b>File → Share → Publish to web</b><br>
+            Choose <code>Sheet1</code> + <code>Comma-separated values (.csv)</code> → click Publish.
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Deploy a Google Apps Script web app</div>
+          <div class="step-desc">
+            In your sheet: <b>Extensions → Apps Script</b> → paste the script below → Save → Deploy as Web App (Anyone can access) → copy the URL.<br><br>
+            <code>📋 Script is shown after you enter your Sheet ID</code>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<table id="table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Remark</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    <div class="field-group">
+      <label class="field-label">Google Sheet ID</label>
+      <input class="field-input" id="sheet-id-input" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms"
+             title="The long string in your sheet URL between /d/ and /edit">
+      <div style="color:var(--muted);font-size:11px;margin-top:6px;">Found in the sheet URL: docs.google.com/spreadsheets/d/<span style="color:var(--accent)">THIS_PART</span>/edit</div>
+    </div>
 
-<div class="add-form">
-  <h3>Add New Record</h3>
-  <input id="name" placeholder="Name">
-  <input id="date" type="date">
-  <input id="remark" placeholder="Remark">
-  <button onclick="addRecord()">Add</button>
+    <div class="field-group">
+      <label class="field-label">Apps Script Web App URL</label>
+      <input class="field-input" id="webapp-url-input" placeholder="https://script.google.com/macros/s/ABC.../exec">
+      <div style="color:var(--muted);font-size:11px;margin-top:6px;">Deploy your Apps Script as a Web App and paste the URL here.</div>
+    </div>
+
+    <button class="btn-primary" onclick="connect()">Connect to Sheet →</button>
+
+    <div id="script-box" style="display:none;margin-top:28px;">
+      <div style="color:var(--muted);font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;">📋 Apps Script to paste</div>
+      <textarea id="script-display" readonly style="
+        width:100%;height:160px;background:var(--bg);border:1px solid var(--border);
+        color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;
+        padding:12px;border-radius:8px;resize:none;outline:none;line-height:1.6;
+      "></textarea>
+      <button onclick="copyScript()" class="btn" style="background:var(--surface);border:1px solid var(--border);color:var(--text);margin-top:8px;font-family:inherit;">📋 Copy Script</button>
+    </div>
+  </div>
 </div>
 
+<!-- ══════════════ MAIN APP ══════════════ -->
+<div id="app">
+  <header>
+    <div class="logo">
+      <div class="logo-mark">⬡</div>
+      <div>
+        <div class="logo-text">Sheets Manager</div>
+        <div class="logo-sub" id="sheet-subtitle">Loading…</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="status-dot" id="status-dot"></span>
+      <span id="status-text" style="color:var(--muted);font-size:12px;"></span>
+      <button class="btn btn-outline" onclick="loadData()">↻ Refresh</button>
+      <button class="btn btn-accent" onclick="addRow()">+ Add Record</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="info-bar">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      <span>
+        Changes are saved back to your Google Sheet via Apps Script.
+        Click <b>✏️</b> to edit a row inline, <b>✓</b> to save, <b>✕</b> to cancel.
+        <button class="reset-btn" onclick="resetConfig()">Change sheet</button>
+      </span>
+    </div>
+
+    <div class="toolbar">
+      <div class="record-count" id="record-count">Loading…</div>
+      <div style="display:flex;gap:8px;">
+        <input id="search-box" placeholder="Search records…" style="
+          background:var(--surface);border:1px solid var(--border);
+          color:var(--text);font-family:'DM Mono',monospace;font-size:13px;
+          padding:8px 14px;border-radius:8px;outline:none;width:220px;
+          transition:border-color 0.2s;
+        " oninput="filterRows()" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Remark</th>
+            <th style="text-align:right;width:120px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <tr><td colspan="5" style="text-align:center;padding:60px;color:var(--muted);">
+            <span class="spin"></span> Loading data…
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════ TOAST CONTAINER ══════════════ -->
+<div id="toast-container"></div>
+
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbykHJqRxpg8bFl1IftcsYREggr678WROOkUmvhF7fA74TsMHJaZ1xgFUWOwRbTlE3qsvA/exec";
+// ─── CONFIG ───────────────────────────────────────────────
+let SHEET_ID = '';
+let WEBAPP_URL = '';
+let allRows = [];
+let newRowCounter = 0;
 
-async function loadData() {
-  const res = await fetch(API_URL);
-  const data = await res.json();
-
-  const tbody = document.querySelector("#table tbody");
-  tbody.innerHTML = "";
-
-  data.slice(1).forEach((row, index) => {
-    const tr = document.createElement("tr");
-
-    tr.innerHTML = `
-      <td contenteditable="true">${row[0]}</td>
-      <td contenteditable="true">${row[1]}</td>
-      <td contenteditable="true">${row[2]}</td>
-      <td>
-        <button onclick="saveRow(this, ${index + 2})">💾 Save</button>
-      </td>
-    `;
-
-    tbody.appendChild(tr);
-  });
+const APPS_SCRIPT = `function doGet(e) {
+  var ss = SpreadsheetApp.openById('SHEET_ID_HERE');
+  var sh = ss.getSheetByName('Sheet1');
+  var data = sh.getDataRange().getValues();
+  var headers = data[0];
+  var rows = [];
+  for (var i = 1; i < data.length; i++) {
+    var row = {};
+    headers.forEach(function(h, j){ row[h] = data[i][j]; });
+    row['_row'] = i + 1;
+    rows.push(row);
+  }
+  return ContentService.createTextOutput(JSON.stringify({status:'ok',rows:rows}))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
-async function addRecord() {
-  const name = document.getElementById("name").value;
-  const date = document.getElementById("date").value;
-  const remark = document.getElementById("remark").value;
+function doPost(e) {
+  var ss = SpreadsheetApp.openById('SHEET_ID_HERE');
+  var sh = ss.getSheetByName('Sheet1');
+  var body = JSON.parse(e.postData.contents);
+  var action = body.action;
 
-  await fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "add",
-      name,
-      date,
-      remark
-    })
+  if (action === 'add') {
+    sh.appendRow([body.Name, body.Date, body.Remark]);
+    return ContentService.createTextOutput(JSON.stringify({status:'ok',message:'Added'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  if (action === 'update') {
+    var rowNum = parseInt(body._row);
+    sh.getRange(rowNum, 1).setValue(body.Name);
+    sh.getRange(rowNum, 2).setValue(body.Date);
+    sh.getRange(rowNum, 3).setValue(body.Remark);
+    return ContentService.createTextOutput(JSON.stringify({status:'ok',message:'Updated'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  if (action === 'delete') {
+    sh.deleteRow(parseInt(body._row));
+    return ContentService.createTextOutput(JSON.stringify({status:'ok',message:'Deleted'}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  return ContentService.createTextOutput(JSON.stringify({status:'error',message:'Unknown action'}))
+    .setMimeType(ContentService.MimeType.JSON);
+}`;
+
+// ─── INIT ─────────────────────────────────────────────────
+window.onload = function () {
+  SHEET_ID   = localStorage.getItem('sm_sheet_id') || '';
+  WEBAPP_URL = localStorage.getItem('sm_webapp_url') || '';
+  if (SHEET_ID && WEBAPP_URL) {
+    launchApp();
+  } else {
+    showSetup();
+  }
+  // Show script snippet when user types sheet ID
+  document.getElementById('sheet-id-input').addEventListener('input', function() {
+    if (this.value.trim().length > 10) showScript(this.value.trim());
   });
+};
 
+function showSetup() {
+  document.getElementById('setup-overlay').classList.remove('hidden');
+  document.getElementById('app').classList.remove('visible');
+}
+function launchApp() {
+  document.getElementById('setup-overlay').classList.add('hidden');
+  document.getElementById('app').classList.add('visible');
+  document.getElementById('sheet-subtitle').textContent = SHEET_ID.substring(0, 20) + '…';
   loadData();
 }
-
-async function saveRow(btn, rowNumber) {
-  const tr = btn.parentElement.parentElement;
-  const cells = tr.querySelectorAll("td");
-
-  const name = cells[0].innerText;
-  const date = cells[1].innerText;
-  const remark = cells[2].innerText;
-
-  await fetch(API_URL, {
-    method: "POST",
-    body: JSON.stringify({
-      action: "update",
-      row: rowNumber,
-      name,
-      date,
-      remark
-    })
-  });
-
-  alert("Saved!");
+function resetConfig() {
+  if (!confirm('Disconnect from current sheet?')) return;
+  localStorage.removeItem('sm_sheet_id');
+  localStorage.removeItem('sm_webapp_url');
+  SHEET_ID = ''; WEBAPP_URL = '';
+  showSetup();
 }
 
-loadData();
-</script>
+function showScript(id) {
+  const script = APPS_SCRIPT.replaceAll('SHEET_ID_HERE', id);
+  document.getElementById('script-display').value = script;
+  document.getElementById('script-box').style.display = 'block';
+}
+function copyScript() {
+  const ta = document.getElementById('script-display');
+  ta.select();
+  document.execCommand('copy');
+  toast('Script copied to clipboard!', 'success');
+}
 
+function connect() {
+  const sid = document.getElementById('sheet-id-input').value.trim();
+  const wurl = document.getElementById('webapp-url-input').value.trim();
+  if (!sid) { toast('Please enter your Sheet ID', 'error'); return; }
+  if (!wurl) { toast('Please enter your Apps Script Web App URL', 'error'); return; }
+  localStorage.setItem('sm_sheet_id', sid);
+  localStorage.setItem('sm_webapp_url', wurl);
+  SHEET_ID = sid; WEBAPP_URL = wurl;
+  launchApp();
+}
+
+// ─── DATA LOADING ──────────────────────────────────────────
+function setStatus(state, text) {
+  const dot = document.getElementById('status-dot');
+  dot.className = 'status-dot ' + state;
+  document.getElementById('status-text').textContent = text;
+}
+
+async function loadData() {
+  setStatus('loading', 'Fetching…');
+  try {
+    const url = `${WEBAPP_URL}?t=${Date.now()}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json.status !== 'ok') throw new Error(json.message || 'Unknown error');
+    allRows = json.rows;
+    renderTable(allRows);
+    const count = allRows.length;
+    document.getElementById('record-count').innerHTML = `<span>${count}</span> record${count!==1?'s':''}`;
+    setStatus('ok', `Synced ${new Date().toLocaleTimeString()}`);
+  } catch (err) {
+    setStatus('err', 'Load failed');
+    toast('Failed to load: ' + err.message, 'error');
+    renderEmpty('Could not reach your sheet. Check the Web App URL.');
+  }
+}
+
+// ─── RENDER ────────────────────────────────────────────────
+function renderTable(rows) {
+  const tbody = document.getElementById('table-body');
+  if (!rows.length) { renderEmpty('No records yet. Click "+ Add Record" to start.'); return; }
+  tbody.innerHTML = rows.map((r, i) => rowHTML(r, i + 1)).join('');
+}
+
+function renderEmpty(msg) {
+  document.getElementById('table-body').innerHTML = `
+    <tr><td colspan="5">
+      <div class="empty-state">
+        <div class="empty-icon">📋</div>
+        <div class="empty-text">No records found</div>
+        <div class="empty-sub">${msg}</div>
+      </div>
+    </td></tr>`;
+}
+
+function rowHTML(r, idx) {
+  const isNew = r._new;
+  return `
+  <tr id="row-${r._row}" class="${isNew ? 'new-row editing' : ''}">
+    <td>${idx}</td>
+    <td>
+      <span class="cell-view">${esc(r.Name || '')}</span>
+      <input class="inline-input cell-edit" id="name-${r._row}" value="${esc(r.Name || '')}" placeholder="Full name">
+    </td>
+    <td>
+      <span class="cell-view">${esc(r.Date || '')}</span>
+      <input class="inline-input cell-edit" id="date-${r._row}" type="date" value="${r.Date || ''}" style="min-width:150px;">
+    </td>
+    <td>
+      <span class="cell-view">${esc(r.Remark || '')}</span>
+      <input class="inline-input cell-edit" id="remark-${r._row}" value="${esc(r.Remark || '')}" placeholder="Add a remark…">
+    </td>
+    <td style="text-align:right;">
+      <div class="cell-actions">
+        <div class="edit-actions">
+          <button class="icon-btn" onclick="editRow('${r._row}')" title="Edit">✏️</button>
+          <button class="icon-btn del-btn" onclick="deleteRow('${r._row}')" title="Delete">🗑️</button>
+        </div>
+        <div class="save-actions">
+          <button class="icon-btn save-btn" onclick="saveRow('${r._row}', ${!!isNew})" title="Save">✓</button>
+          <button class="icon-btn" onclick="cancelEdit('${r._row}', ${!!isNew})" title="Cancel">✕</button>
+        </div>
+      </div>
+    </td>
+  </tr>`;
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ─── EDITING ───────────────────────────────────────────────
+function editRow(rowId) {
+  document.getElementById('row-' + rowId).classList.add('editing');
+}
+
+function cancelEdit(rowId, isNew) {
+  if (isNew) {
+    document.getElementById('row-' + rowId).remove();
+    return;
+  }
+  document.getElementById('row-' + rowId).classList.remove('editing');
+}
+
+function addRow() {
+  newRowCounter--;
+  const tempId = 'new_' + Math.abs(newRowCounter);
+  const newR = { Name: '', Date: '', Remark: '', _row: tempId, _new: true };
+  const tbody = document.getElementById('table-body');
+  // Remove empty-state row if present
+  if (tbody.querySelector('.empty-state')) tbody.innerHTML = '';
+  tbody.insertAdjacentHTML('afterbegin', rowHTML(newR, '★'));
+  document.getElementById('name-' + tempId).focus();
+}
+
+async function saveRow(rowId, isNew) {
+  const name   = document.getElementById('name-'   + rowId).value.trim();
+  const date   = document.getElementById('date-'   + rowId).value.trim();
+  const remark = document.getElementById('remark-' + rowId).value.trim();
+
+  if (!name) { toast('Name is required', 'error'); return; }
+
+  const payload = isNew
+    ? { action: 'add', Name: name, Date: date, Remark: remark }
+    : { action: 'update', _row: rowId, Name: name, Date: date, Remark: remark };
+
+  setStatus('loading', 'Saving…');
+  try {
+    await postToSheet(payload);
+    toast(isNew ? 'Record added ✓' : 'Record updated ✓', 'success');
+    await loadData();
+  } catch (e) {
+    setStatus('err', 'Save failed');
+    toast('Save failed: ' + e.message, 'error');
+  }
+}
+
+async function deleteRow(rowId) {
+  if (!confirm('Delete this record?')) return;
+  setStatus('loading', 'Deleting…');
+  try {
+    await postToSheet({ action: 'delete', _row: rowId });
+    toast('Record deleted', 'info');
+    await loadData();
+  } catch (e) {
+    setStatus('err', 'Delete failed');
+    toast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+// ─── SEARCH ────────────────────────────────────────────────
+function filterRows() {
+  const q = document.getElementById('search-box').value.toLowerCase();
+  const filtered = allRows.filter(r =>
+    (r.Name||'').toLowerCase().includes(q) ||
+    (r.Date||'').toLowerCase().includes(q) ||
+    (r.Remark||'').toLowerCase().includes(q)
+  );
+  const count = filtered.length;
+  document.getElementById('record-count').innerHTML = `<span>${count}</span> of ${allRows.length} record${allRows.length!==1?'s':''}`;
+  renderTable(filtered);
+}
+
+// ─── API CALLS ─────────────────────────────────────────────
+async function postToSheet(payload) {
+  const res = await fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  });
+  const json = await res.json();
+  if (json.status !== 'ok') throw new Error(json.message || 'Server error');
+  return json;
+}
+
+// ─── TOAST ─────────────────────────────────────────────────
+function toast(msg, type = 'info') {
+  const icons = { success: '✓', error: '⚠', info: 'ℹ' };
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<span>${icons[type]||'•'}</span> ${msg}`;
+  c.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.4s'; setTimeout(() => t.remove(), 400); }, 3000);
+}
+</script>
 </body>
 </html>
