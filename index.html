@@ -1,773 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Google Sheets Record Manager</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <title>Google Sheets CRUD</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f5f7fa;
+    }
+    h2 { text-align: center; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: white;
+    }
 
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-            animation: fadeIn 0.5s ease-out;
-        }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    th {
+      background: #4CAF50;
+      color: white;
+    }
 
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
+    input {
+      padding: 6px;
+      width: 90%;
+    }
 
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    button {
+      padding: 6px 12px;
+      margin: 3px;
+      cursor: pointer;
+    }
 
-        .header-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .config-btn {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .config-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .btn-refresh {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .btn-refresh:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
-        }
-
-        .btn-refresh:active {
-            transform: translateY(0);
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            padding: 20px;
-            background: #f8f9fa;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        th {
-            padding: 15px;
-            text-align: left;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #e9ecef;
-            vertical-align: middle;
-            background: white;
-        }
-
-        tr:hover td {
-            background: #f8f9ff;
-        }
-
-        .loading {
-            text-align: center;
-            color: #6c757d;
-            padding: 40px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px;
-            color: #6c757d;
-        }
-
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .edit-input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .edit-input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-        }
-
-        input[type="date"].edit-input {
-            padding: 7px 12px;
-        }
-
-        .btn-edit, .btn-save, .btn-cancel {
-            padding: 6px 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            margin: 0 4px;
-        }
-
-        .btn-edit {
-            background: #4caf50;
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background: #45a049;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(76,175,80,0.3);
-        }
-
-        .btn-save {
-            background: #2196f3;
-            color: white;
-        }
-
-        .btn-save:hover {
-            background: #0b7dda;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(33,150,243,0.3);
-        }
-
-        .btn-cancel {
-            background: #f44336;
-            color: white;
-        }
-
-        .btn-cancel:hover {
-            background: #da190b;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(244,67,54,0.3);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .status-message {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 10px;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            animation: slideIn 0.3s ease-out;
-            z-index: 1000;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .status-success {
-            border-left: 4px solid #4caf50;
-            color: #2e7d32;
-            background: #f1f8e9;
-        }
-
-        .status-error {
-            border-left: 4px solid #f44336;
-            color: #c62828;
-            background: #ffebee;
-        }
-
-        .status-info {
-            border-left: 4px solid #2196f3;
-            color: #1565c0;
-            background: #e3f2fd;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            animation: modalSlideIn 0.3s ease-out;
-        }
-
-        @keyframes modalSlideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-content h3 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 0.95rem;
-        }
-
-        .modal-content input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .btn-primary {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #5a67d8;
-        }
-
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        .btn-secondary:hover {
-            background: #d0d0d0;
-        }
-
-        .config-info {
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            word-break: break-all;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            th, td {
-                padding: 10px;
-            }
-            
-            .btn-edit, .btn-save, .btn-cancel {
-                padding: 5px 10px;
-                font-size: 0.75rem;
-            }
-            
-            header {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            h1 {
-                font-size: 1.4rem;
-            }
-        }
-    </style>
+    .add-form {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <header>
-            <h1>
-                📊 Record Manager
-            </h1>
-            <div class="header-controls">
-                <button class="config-btn" onclick="showConfigModal()">⚙️ Configure Sheet</button>
-                <button id="refreshBtn" class="btn-refresh">🔄 Refresh Data</button>
-            </div>
-        </header>
 
-        <div class="table-wrapper">
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Date</th>
-                        <th>Remark</th>
-                        <th style="width: 140px">Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr>
-                        <td colspan="4" class="loading">
-                            <div>📌 Please configure your Google Sheets URL first</div>
-                            <div style="font-size: 0.85rem; margin-top: 10px;">Click the "Configure Sheet" button to get started</div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+<h2>Google Sheets Manager</h2>
 
-    <!-- Configuration Modal -->
-    <div id="configModal" class="modal">
-        <div class="modal-content">
-            <h3>⚙️ Google Sheets Configuration</h3>
-            <div class="config-info">
-                <strong>How to set up:</strong><br>
-                1. Open your Google Sheet<br>
-                2. Go to Extensions > Apps Script<br>
-                3. Paste the script from below<br>
-                4. Deploy as Web App<br>
-                5. Copy the URL and paste it here
-            </div>
-            <label>Google Apps Script Web App URL:</label>
-            <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" value="">
-            <div class="modal-buttons">
-                <button class="btn-secondary" onclick="closeConfigModal()">Cancel</button>
-                <button class="btn-primary" onclick="saveConfig()">Save & Test</button>
-            </div>
-        </div>
-    </div>
+<button onclick="loadData()">🔄 Refresh</button>
 
-    <script>
-        // Global variables
-        let currentData = [];
-        let scriptUrl = localStorage.getItem('googleSheetsScriptUrl') || '';
+<table id="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Date</th>
+      <th>Remark</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
 
-        // Helper function to show status messages
-        function showMessage(message, type = 'success') {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `status-message status-${type}`;
-            const icon = type === 'success' ? '✅' : (type === 'error' ? '❌' : 'ℹ️');
-            msgDiv.innerHTML = `${icon} ${message}`;
-            document.body.appendChild(msgDiv);
-            
-            setTimeout(() => {
-                msgDiv.remove();
-            }, 3000);
-        }
+<div class="add-form">
+  <h3>Add New Record</h3>
+  <input id="name" placeholder="Name">
+  <input id="date" type="date">
+  <input id="remark" placeholder="Remark">
+  <button onclick="addRecord()">Add</button>
+</div>
 
-        // Load saved URL on startup
-        function loadSavedConfig() {
-            if (scriptUrl) {
-                document.getElementById('scriptUrlInput').value = scriptUrl;
-                showMessage('Using saved configuration', 'info');
-                fetchData();
-            }
-        }
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbykHJqRxpg8bFl1IftcsYREggr678WROOkUmvhF7fA74TsMHJaZ1xgFUWOwRbTlE3qsvA/exec";
 
-        // Show configuration modal
-        function showConfigModal() {
-            document.getElementById('scriptUrlInput').value = scriptUrl;
-            document.getElementById('configModal').classList.add('active');
-        }
+async function loadData() {
+  const res = await fetch(API_URL);
+  const data = await res.json();
 
-        function closeConfigModal() {
-            document.getElementById('configModal').classList.remove('active');
-        }
+  const tbody = document.querySelector("#table tbody");
+  tbody.innerHTML = "";
 
-        function saveConfig() {
-            const newUrl = document.getElementById('scriptUrlInput').value.trim();
-            if (!newUrl) {
-                showMessage('Please enter a valid URL', 'error');
-                return;
-            }
-            
-            scriptUrl = newUrl;
-            localStorage.setItem('googleSheetsScriptUrl', scriptUrl);
-            closeConfigModal();
-            showMessage('Configuration saved! Fetching data...', 'success');
-            fetchData();
-        }
+  data.slice(1).forEach((row, index) => {
+    const tr = document.createElement("tr");
 
-        // Fetch data from Google Apps Script
-        async function fetchData() {
-            if (!scriptUrl) {
-                document.getElementById('tableBody').innerHTML = `
-                    <tr>
-                        <td colspan="4" class="empty-state">
-                            <div>⚙️ No configuration found</div>
-                            <div style="font-size: 0.85rem; margin-top: 10px;">Click "Configure Sheet" to set up your Google Sheets connection</div>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
+    tr.innerHTML = `
+      <td contenteditable="true">${row[0]}</td>
+      <td contenteditable="true">${row[1]}</td>
+      <td contenteditable="true">${row[2]}</td>
+      <td>
+        <button onclick="saveRow(this, ${index + 2})">💾 Save</button>
+      </td>
+    `;
 
-            try {
-                document.getElementById('tableBody').innerHTML = '<tr><td colspan="4" class="loading">🔄 Loading data from Google Sheets...</td></tr>';
-                
-                const response = await fetch(`${scriptUrl}?t=${Date.now()}`, {
-                    method: 'GET',
-                    mode: 'cors'
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-                
-                currentData = Array.isArray(data) ? data : [];
-                renderTable();
-                showMessage(`✅ Loaded ${currentData.length} records successfully!`, 'success');
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                document.getElementById('tableBody').innerHTML = `
-                    <tr>
-                        <td colspan="4" class="empty-state">
-                            <div>❌ Failed to connect to Google Sheets</div>
-                            <div style="font-size: 0.85rem; margin-top: 10px;">Please check your URL and make sure the Apps Script is deployed correctly</div>
-                            <div style="font-size: 0.8rem; margin-top: 10px; color: #999;">Error: ${error.message}</div>
-                        </td>
-                    </tr>
-                `;
-                showMessage('Failed to fetch data. Check configuration and console.', 'error');
-            }
-        }
+    tbody.appendChild(tr);
+  });
+}
 
-        // Update record in Google Sheets
-        async function updateRecord(row, name, date, remark) {
-            if (!scriptUrl) {
-                showMessage('Please configure Google Sheets URL first', 'error');
-                return false;
-            }
+async function addRecord() {
+  const name = document.getElementById("name").value;
+  const date = document.getElementById("date").value;
+  const remark = document.getElementById("remark").value;
 
-            try {
-                const response = await fetch(scriptUrl, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ 
-                        action: 'update',
-                        row: row, 
-                        name: name, 
-                        date: date, 
-                        remark: remark 
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage('✅ Record updated successfully!', 'success');
-                    await fetchData(); // Refresh the table
-                    return true;
-                } else {
-                    throw new Error(result.error || 'Update failed');
-                }
-            } catch (error) {
-                console.error('Error updating record:', error);
-                showMessage(`❌ Failed to update: ${error.message}`, 'error');
-                return false;
-            }
-        }
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "add",
+      name,
+      date,
+      remark
+    })
+  });
 
-        // Render table with current data
-        function renderTable() {
-            const tbody = document.getElementById('tableBody');
-            
-            if (!currentData || currentData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="empty-state">
-                            <div>📭 No records found</div>
-                            <div style="font-size: 0.85rem; margin-top: 10px;">Add some data to your Google Sheet to get started</div>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            tbody.innerHTML = currentData.map(record => `
-                <tr data-row="${record.row}" data-editing="false">
-                    <td class="name-cell">${escapeHtml(record.name || '')}</td>
-                    <td class="date-cell">${escapeHtml(record.date || '')}</td>
-                    <td class="remark-cell">${escapeHtml(record.remark || '')}</td>
-                    <td class="action-buttons">
-                        <button class="btn-edit" onclick="startEdit(${record.row})">✏️ Edit</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
+  loadData();
+}
 
-        // Escape HTML to prevent XSS
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
+async function saveRow(btn, rowNumber) {
+  const tr = btn.parentElement.parentElement;
+  const cells = tr.querySelectorAll("td");
 
-        // Start editing a row
-        function startEdit(row) {
-            const rowData = currentData.find(r => r.row === row);
-            if (!rowData) return;
-            
-            const tr = document.querySelector(`tr[data-row="${row}"]`);
-            if (tr.dataset.editing === 'true') return;
-            
-            tr.dataset.editing = 'true';
-            
-            tr.innerHTML = `
-                <td><input type="text" class="edit-input" id="edit-name-${row}" value="${escapeHtml(rowData.name || '')}" placeholder="Enter name"></td>
-                <td><input type="date" class="edit-input" id="edit-date-${row}" value="${escapeHtml(rowData.date || '')}"></td>
-                <td><input type="text" class="edit-input" id="edit-remark-${row}" value="${escapeHtml(rowData.remark || '')}" placeholder="Enter remark"></td>
-                <td class="action-buttons">
-                    <button class="btn-save" onclick="saveEdit(${row})">💾 Save</button>
-                    <button class="btn-cancel" onclick="cancelEdit(${row})">✖️ Cancel</button>
-                </td>
-            `;
-            
-            // Focus on name input
-            document.getElementById(`edit-name-${row}`).focus();
-        }
+  const name = cells[0].innerText;
+  const date = cells[1].innerText;
+  const remark = cells[2].innerText;
 
-        // Save edited record
-        async function saveEdit(row) {
-            const name = document.getElementById(`edit-name-${row}`).value.trim();
-            const date = document.getElementById(`edit-date-${row}`).value;
-            const remark = document.getElementById(`edit-remark-${row}`).value;
-            
-            if (!name) {
-                showMessage('⚠️ Name is required!', 'error');
-                return;
-            }
-            
-            await updateRecord(row, name, date, remark);
-        }
+  await fetch(API_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "update",
+      row: rowNumber,
+      name,
+      date,
+      remark
+    })
+  });
 
-        // Cancel editing
-        function cancelEdit(row) {
-            const rowData = currentData.find(r => r.row === row);
-            if (rowData) {
-                const tr = document.querySelector(`tr[data-row="${row}"]`);
-                tr.dataset.editing = 'false';
-                tr.innerHTML = `
-                    <td class="name-cell">${escapeHtml(rowData.name || '')}</td>
-                    <td class="date-cell">${escapeHtml(rowData.date || '')}</td>
-                    <td class="remark-cell">${escapeHtml(rowData.remark || '')}</td>
-                    <td class="action-buttons">
-                        <button class="btn-edit" onclick="startEdit(${row})">✏️ Edit</button>
-                    </td>
-                `;
-            }
-        }
+  alert("Saved!");
+}
 
-        // Initialize and set up event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSavedConfig();
-            
-            document.getElementById('refreshBtn').addEventListener('click', () => {
-                fetchData();
-            });
-            
-            // Close modal when clicking outside
-            document.getElementById('configModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('configModal')) {
-                    closeConfigModal();
-                }
-            });
-        });
+loadData();
+</script>
 
-        // Make functions globally available for inline onclick
-        window.startEdit = startEdit;
-        window.saveEdit = saveEdit;
-        window.cancelEdit = cancelEdit;
-        window.showConfigModal = showConfigModal;
-        window.closeConfigModal = closeConfigModal;
-        window.saveConfig = saveConfig;
-    </script>
-
-    <!-- Instructions for Google Apps Script -->
-    <div style="display: none;" id="appsScriptCode">
-        // ===================================================
-        // COPY THIS CODE INTO YOUR GOOGLE APPS SCRIPT EDITOR
-        // ===================================================
-        
-        function doGet() {
-            return ContentService.createTextOutput(JSON.stringify(getData()))
-                .setMimeType(ContentService.MimeType.JSON);
-        }
-        
-        function doPost(request) {
-            try {
-                const data = JSON.parse(request.postData.contents);
-                
-                if (data.action === 'update') {
-                    updateRecord(data.row, data.name, data.date, data.remark);
-                    return ContentService.createTextOutput(JSON.stringify({success: true}))
-                        .setMimeType(ContentService.MimeType.JSON);
-                }
-                
-                return ContentService.createTextOutput(JSON.stringify({error: 'Unknown action'}))
-                    .setMimeType(ContentService.MimeType.JSON);
-            } catch (error) {
-                return ContentService.createTextOutput(JSON.stringify({error: error.toString()}))
-                    .setMimeType(ContentService.MimeType.JSON);
-            }
-        }
-        
-        function getData() {
-            const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-            const data = sheet.getDataRange().getValues();
-            
-            // Skip header row and return data with row numbers
-            const result = [];
-            for (let i = 1; i < data.length; i++) {
-                if (data[i][0]) { // Only include rows with name
-                    result.push({
-                        row: i + 1, // Row number in sheet (1-indexed)
-                        name: data[i][0] || '',
-                        date: data[i][1] || '',
-                        remark: data[i][2] || ''
-                    });
-                }
-            }
-            return result;
-        }
-        
-        function updateRecord(row, name, date, remark) {
-            const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-            sheet.getRange(row, 1).setValue(name);
-            sheet.getRange(row, 2).setValue(date);
-            sheet.getRange(row, 3).setValue(remark);
-        }
-    </div>
 </body>
 </html>
