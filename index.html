@@ -126,97 +126,21 @@ option{background:var(--surface2);color:var(--text)}
 .loading-text{font-family:var(--font-mono);font-size:0.78rem;color:var(--text-sub)}
 .loading-sub{font-size:0.72rem;color:var(--text-dim);font-style:italic}
 
-/* ══════════════════════════════════════════════
-   UNIVERSAL STATS BAR  ← replaces .stats-row / .stat-card everywhere
-══════════════════════════════════════════════ */
-.stats-bar{
-  display:flex;
-  align-items:stretch;
-  margin-bottom:16px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  overflow:hidden;
-  overflow-x:auto;
-  transition:background var(--transition);
-  flex-shrink:0;
-}
+/* ══ STATS BAR ══ */
+.stats-bar{display:flex;align-items:stretch;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;overflow-x:auto;transition:background var(--transition);flex-shrink:0}
 .stats-bar::-webkit-scrollbar{height:3px}
 .stats-bar::-webkit-scrollbar-thumb{background:var(--scroll-thumb);border-radius:10px}
-
-.stats-bar-group{
-  display:flex;
-  align-items:stretch;
-  flex-shrink:0;
-}
-.stats-bar-group+.stats-bar-group{
-  border-left:2px solid var(--border-br);
-}
-.stats-bar-group-label{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  writing-mode:vertical-rl;
-  text-orientation:mixed;
-  transform:rotate(180deg);
-  font-family:var(--font-mono);
-  font-size:0.55rem;
-  text-transform:uppercase;
-  letter-spacing:0.12em;
-  color:var(--text-dim);
-  padding:0 7px;
-  background:var(--surface2);
-  border-right:1px solid var(--border);
-  white-space:nowrap;
-  min-width:22px;
-}
-
-.stat-pill{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:10px 18px;
-  border-right:1px solid var(--border);
-  min-width:96px;
-  gap:3px;
-  transition:background 0.15s,border-top 0.15s,padding-top 0.15s;
-  cursor:default;
-  flex-shrink:0;
-}
+.stats-bar-group{display:flex;align-items:stretch;flex-shrink:0}
+.stats-bar-group+.stats-bar-group{border-left:2px solid var(--border-br)}
+.stats-bar-group-label{display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-family:var(--font-mono);font-size:0.55rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim);padding:0 7px;background:var(--surface2);border-right:1px solid var(--border);white-space:nowrap;min-width:22px}
+.stat-pill{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 18px;border-right:1px solid var(--border);min-width:96px;gap:3px;transition:background 0.15s,border-top 0.15s,padding-top 0.15s;cursor:default;flex-shrink:0}
 .stat-pill:last-child{border-right:none}
 .stat-pill:hover{background:var(--card-hover)}
-
-/* colour variants — value colour + hover accent bar */
-.sp-orange{--sc:var(--accent)}
-.sp-blue  {--sc:var(--accent2)}
-.sp-green {--sc:var(--accent3)}
-.sp-warn  {--sc:var(--warning)}
-.sp-danger{--sc:var(--danger)}
-.sp-purple{--sc:#9b5de5}
-.sp-teal  {--sc:#17b8c4}
-.sp-dim   {--sc:var(--text-sub)}
-
+.sp-orange{--sc:var(--accent)}.sp-blue{--sc:var(--accent2)}.sp-green{--sc:var(--accent3)}.sp-warn{--sc:var(--warning)}.sp-danger{--sc:var(--danger)}.sp-purple{--sc:#9b5de5}.sp-teal{--sc:#17b8c4}.sp-dim{--sc:var(--text-sub)}
 .stat-pill:hover{border-top:2px solid var(--sc,var(--accent));padding-top:8px}
-
 .stat-pill-icon{font-size:0.68rem;color:var(--text-dim);margin-bottom:1px}
-.stat-pill-value{
-  font-family:var(--font-display);
-  font-size:1.28rem;
-  font-weight:700;
-  line-height:1;
-  letter-spacing:-0.02em;
-  color:var(--sc,var(--text));
-}
-.stat-pill-label{
-  font-family:var(--font-mono);
-  font-size:0.58rem;
-  color:var(--text-sub);
-  text-transform:uppercase;
-  letter-spacing:0.07em;
-  text-align:center;
-  white-space:nowrap;
-}
+.stat-pill-value{font-family:var(--font-display);font-size:1.28rem;font-weight:700;line-height:1;letter-spacing:-0.02em;color:var(--sc,var(--text))}
+.stat-pill-label{font-family:var(--font-mono);font-size:0.58rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.07em;text-align:center;white-space:nowrap}
 
 /* ══ CHARTS ══ */
 .chart-grid{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:16px}
@@ -227,9 +151,7 @@ option{background:var(--surface2);color:var(--text)}
 .chart-card-title{font-family:var(--font-display);font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:4px}
 .chart-card-sub{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-sub);margin-bottom:14px}
 .chart-wrap{position:relative}
-.chart-wrap.h200{height:200px}.chart-wrap.h220{height:220px}
-.chart-wrap.h240{height:240px}.chart-wrap.h260{height:260px}
-.chart-wrap.h280{height:280px}.chart-wrap.h320{height:320px}
+.chart-wrap.h200{height:200px}.chart-wrap.h220{height:220px}.chart-wrap.h240{height:240px}.chart-wrap.h260{height:260px}.chart-wrap.h280{height:280px}.chart-wrap.h320{height:320px}
 
 /* ══ KPI CARDS ══ */
 .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:20px}
@@ -270,7 +192,7 @@ option{background:var(--surface2);color:var(--text)}
 .work-meta-value{font-size:0.82rem;font-weight:600;color:var(--text)}
 .work-sub-head{padding:10px 18px;font-family:var(--font-mono);font-size:0.67rem;color:var(--text-sub);text-transform:uppercase;letter-spacing:0.08em;border-bottom:1px solid var(--border);background:var(--surface2);transition:background var(--transition)}
 
-/* ══ DAY SUMMARY (Reports tab) ══ */
+/* ══ DAY SUMMARY ══ */
 .day-summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px;margin-bottom:16px}
 .day-summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px;transition:background var(--transition),box-shadow 0.2s}
 .day-summary-card:hover{box-shadow:var(--shadow-sm)}
@@ -305,7 +227,7 @@ option{background:var(--surface2);color:var(--text)}
 .prog-bar-fill{height:100%;border-radius:4px;transition:width 0.5s ease}
 .prog-val{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-sub);min-width:36px;text-align:right}
 
-/* ══ INSIGHT GRID (KPI) ══ */
+/* ══ INSIGHT GRID ══ */
 .insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 .insight-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:background var(--transition)}
 .insight-card-title{font-family:var(--font-display);font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:3px}
@@ -323,7 +245,7 @@ option{background:var(--surface2);color:var(--text)}
 .btn-refresh{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;background:rgba(58,123,213,0.1);border:1px solid rgba(58,123,213,0.3);border-radius:var(--radius-sm);color:var(--accent2);font-size:0.78rem;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all var(--transition);white-space:nowrap}
 .btn-refresh:hover{background:rgba(58,123,213,0.18);border-color:rgba(58,123,213,0.5)}
 
-/* ══ CAMP EDIT TABLE ══ */
+/* ══ CAMP TABLE ══ */
 .camp-table tr.editing{background:rgba(224,123,57,0.04) !important}
 .camp-table tr.new-row{background:rgba(46,170,126,0.04) !important}
 .camp-table .cell-edit{display:none}
@@ -345,16 +267,16 @@ tr.editing .save-actions{display:flex}
 tr.editing .edit-actions{display:none}
 tr.saving td{opacity:0.55}
 
-/* ══ STATUS / CAT / NAT PILLS ══ */
+/* ══ STATUS PILLS ══ */
 .status-pill{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-family:var(--font-mono);font-size:0.67rem;font-weight:600;white-space:nowrap}
-.s-pob  {background:rgba(46,170,126,0.12);color:var(--accent3);border:1px solid rgba(46,170,126,0.28)}
+.s-pob{background:rgba(46,170,126,0.12);color:var(--accent3);border:1px solid rgba(46,170,126,0.28)}
 .s-pob-a{background:rgba(46,170,126,0.08);color:#34c58a;border:1px solid rgba(52,197,138,0.28)}
 .s-pob-b{background:rgba(58,123,213,0.10);color:var(--accent2);border:1px solid rgba(58,123,213,0.28)}
 .s-pob-c{background:rgba(155,93,229,0.10);color:#9b5de5;border:1px solid rgba(155,93,229,0.28)}
 .s-pob-d{background:rgba(23,184,196,0.10);color:#17b8c4;border:1px solid rgba(23,184,196,0.28)}
-.s-pol  {background:rgba(212,146,43,0.10);color:var(--warning);border:1px solid rgba(212,146,43,0.28)}
-.s-por  {background:rgba(217,79,79,0.10);color:var(--danger);border:1px solid rgba(217,79,79,0.28)}
-.s-def  {background:var(--surface2);color:var(--text-sub);border:1px solid var(--border-br)}
+.s-pol{background:rgba(212,146,43,0.10);color:var(--warning);border:1px solid rgba(212,146,43,0.28)}
+.s-por{background:rgba(217,79,79,0.10);color:var(--danger);border:1px solid rgba(217,79,79,0.28)}
+.s-def{background:var(--surface2);color:var(--text-sub);border:1px solid var(--border-br)}
 .cat-mp{background:rgba(46,170,126,0.10);color:var(--accent3);border:1px solid rgba(46,170,126,0.22);display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;font-weight:500}
 .cat-eq{background:rgba(58,123,213,0.10);color:var(--accent2);border:1px solid rgba(58,123,213,0.22);display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;font-weight:500}
 .cat-def{background:var(--surface2);color:var(--text-sub);border:1px solid var(--border-br);display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-family:var(--font-mono);font-size:0.66rem;font-weight:500}
@@ -419,7 +341,7 @@ tr.saving td{opacity:0.55}
     <button class="btn-login" id="btn-login">Sign In</button>
     <div class="login-error" id="login-err"><i class="fas fa-circle-exclamation"></i> Invalid username or password</div>
     <div class="login-footer">Gulf Petrochemical Services LLC. © 2025 — All Rights Reserved</div>
-    <div class="login-version">v3.4.0</div>
+    <div class="login-version">v3.4.1</div>
   </div>
 </div>
 
@@ -452,7 +374,7 @@ tr.saving td{opacity:0.55}
 
   <div class="content">
 
-    <!-- ══ ANALYTICS ══ -->
+    <!-- ANALYTICS -->
     <div id="tab-summary" class="tab-panel active">
       <div class="page-header"><h1 class="page-title">Work <span>Analytics</span></h1></div>
       <div class="date-range-row">
@@ -479,7 +401,7 @@ tr.saving td{opacity:0.55}
       </div>
     </div>
 
-    <!-- ══ KPI ══ -->
+    <!-- KPI -->
     <div id="tab-kpi" class="tab-panel">
       <div class="page-header"><h1 class="page-title">KPI <span>Dashboard</span></h1></div>
       <div class="date-range-row">
@@ -517,7 +439,7 @@ tr.saving td{opacity:0.55}
       </div>
     </div>
 
-    <!-- ══ REPORT SUMMARY ══ -->
+    <!-- REPORT SUMMARY -->
     <div id="tab-repsum" class="tab-panel">
       <div class="page-header"><h1 class="page-title">Report <span>Summary</span></h1></div>
       <div class="filters">
@@ -535,7 +457,7 @@ tr.saving td{opacity:0.55}
       </div>
     </div>
 
-    <!-- ══ DAILY REPORTS ══ -->
+    <!-- DAILY REPORTS -->
     <div id="tab-reports" class="tab-panel">
       <div class="page-header">
         <h1 class="page-title">Daily <span>Reports</span></h1>
@@ -551,7 +473,7 @@ tr.saving td{opacity:0.55}
       <div id="rep-content" style="display:none"><div id="day-summary-wrap"></div><div id="rep-cards"></div></div>
     </div>
 
-    <!-- ══ PROJECT STATUS ══ -->
+    <!-- PROJECT STATUS -->
     <div id="tab-status" class="tab-panel">
       <div class="page-header"><h1 class="page-title">Project <span>Status</span></h1></div>
       <div class="filters">
@@ -569,7 +491,7 @@ tr.saving td{opacity:0.55}
       </div>
     </div>
 
-    <!-- ══ RESOURCES ══ -->
+    <!-- RESOURCES -->
     <div id="tab-resource" class="tab-panel">
       <div class="page-header"><h1 class="page-title">Resource <span>Allocation</span></h1></div>
       <div class="filters">
@@ -583,7 +505,7 @@ tr.saving td{opacity:0.55}
       </div>
     </div>
 
-    <!-- ══ CAMP ══ -->
+    <!-- CAMP -->
     <div id="tab-camp" class="tab-panel">
       <div class="page-header">
         <h1 class="page-title">Camp <span>Details</span></h1>
@@ -615,8 +537,8 @@ tr.saving td{opacity:0.55}
       </div>
     </div>
 
-  </div><!-- /content -->
-</div><!-- /dashboard -->
+  </div>
+</div>
 
 <button id="back-to-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i class="fas fa-chevron-up"></i></button>
 <div id="pdf-overlay"><div class="pdf-modal"><div class="spinner"></div><div class="pdf-modal-title">Generating PDF</div><div class="pdf-modal-sub" id="pdf-progress-text">Preparing work reports…</div></div></div>
@@ -663,24 +585,10 @@ updateChartDefaults();
 Chart.defaults.font.family = "'DM Mono', monospace";
 Chart.defaults.font.size = 11;
 
-/* ══ UNIVERSAL STATS BAR BUILDER ══ */
-/**
- * buildStatsBar(groups)
- * groups: [ { label: string, pills: [ { label, value, icon, color:'sp-orange'|'sp-blue'|... } ] } ]
- * Returns an HTML string for .stats-bar
- */
+/* ══ STATS BAR BUILDER ══ */
 function buildStatsBar(groups) {
-  const pill = (p) => `
-    <div class="stat-pill ${p.color||''}">
-      <div class="stat-pill-icon"><i class="fas ${p.icon}"></i></div>
-      <div class="stat-pill-value">${p.value}</div>
-      <div class="stat-pill-label">${p.label}</div>
-    </div>`;
-  const group = (g) => `
-    <div class="stats-bar-group">
-      ${g.label ? `<div class="stats-bar-group-label">${g.label}</div>` : ''}
-      ${g.pills.map(pill).join('')}
-    </div>`;
+  const pill = (p) => `<div class="stat-pill ${p.color||''}"><div class="stat-pill-icon"><i class="fas ${p.icon}"></i></div><div class="stat-pill-value">${p.value}</div><div class="stat-pill-label">${p.label}</div></div>`;
+  const group = (g) => `<div class="stats-bar-group">${g.label ? `<div class="stats-bar-group-label">${g.label}</div>` : ''}${g.pills.map(pill).join('')}</div>`;
   return `<div class="stats-bar">${groups.map(group).join('')}</div>`;
 }
 
@@ -882,19 +790,15 @@ function renderSummary(){
   const totalFore=new Set(DATA.filter(inRange).map(r=>r['FOREMAN ID']).filter(Boolean)).size;
   const activeDays=Object.values(actByDay).filter(d=>d.active).length;
   const totalAreas=Object.keys(areaCrew).length;
-
-  document.getElementById('sum-stats-bar').innerHTML = buildStatsBar([{
-    label:'', pills:[
-      {label:'Total Crew',    value:totalCrew,    icon:'fa-people-group',       color:'sp-orange'},
-      {label:'Total Foremen', value:totalFore,    icon:'fa-hard-hat',           color:'sp-blue'},
-      {label:'Active Days',   value:activeDays,   icon:'fa-calendar-check',     color:'sp-green'},
-      {label:'Areas Active',  value:totalAreas,   icon:'fa-map-location-dot',   color:'sp-teal'},
-      {label:'Manpower',      value:mpCount.mp,   icon:'fa-person-digging',     color:'sp-green'},
-      {label:'Equipment',     value:mpCount.eq,   icon:'fa-gear',               color:'sp-blue'},
-      {label:'Unclassified',  value:mpCount.nf,   icon:'fa-circle-question',    color:'sp-warn'},
-    ]
-  }]);
-
+  document.getElementById('sum-stats-bar').innerHTML = buildStatsBar([{label:'', pills:[
+    {label:'Total Crew',    value:totalCrew,   icon:'fa-people-group',     color:'sp-orange'},
+    {label:'Total Foremen', value:totalFore,   icon:'fa-hard-hat',         color:'sp-blue'},
+    {label:'Active Days',   value:activeDays,  icon:'fa-calendar-check',   color:'sp-green'},
+    {label:'Areas Active',  value:totalAreas,  icon:'fa-map-location-dot', color:'sp-teal'},
+    {label:'Manpower',      value:mpCount.mp,  icon:'fa-person-digging',   color:'sp-green'},
+    {label:'Equipment',     value:mpCount.eq,  icon:'fa-gear',             color:'sp-blue'},
+    {label:'Unclassified',  value:mpCount.nf,  icon:'fa-circle-question',  color:'sp-warn'},
+  ]}]);
   const topAreas=Object.keys(areaCrew).map(a=>({name:a,total:Object.values(areaCrew[a]).reduce((s,v)=>s+v.size,0)})).sort((a,b)=>b.total-a.total).slice(0,5).map(a=>a.name);
   const labels=days.map(d=>fmtDisplay(d));
   mkChart('ch-alloc','bar',labels,topAreas.map((a,i)=>({label:a,data:days.map(d=>areaCrew[a]?.[toKey(d)]?.size||0),backgroundColor:palA(i),borderColor:PALETTE[i%PALETTE.length],borderWidth:1})),{stacked:true});
@@ -971,7 +875,7 @@ function renderKPI(){
   document.getElementById('kpi-day-body').innerHTML=Object.values(dayStats).sort((a,b)=>b.date-a.date).map(d=>`<tr><td class="mono">${fmtDisplay(d.date)}</td><td>${d.areas.size}</td><td>${d.foremen.size}</td><td><strong>${d.crew.size}</strong></td><td>${d.projects.size}</td><td>${d.mp}</td><td>${d.eq}</td><td><span class="dot dot-green"></span>Active</td></tr>`).join('')||'<tr><td colspan="8" class="no-data">No data</td></tr>';
 }
 
-/* ══ DAILY REPORTS ══ */
+/* ══ DAILY REPORTS (UI) ══ */
 function renderReports(){
   if(!dataReady) return;
   const d=getDate('r-date'),area=document.getElementById('r-area').value;
@@ -1004,35 +908,363 @@ function renderReports(){
   cards.innerHTML=html;
 }
 
-/* ══ PDF ══ */
+/* ══════════════════════════════════════════════════════════════
+   PDF GENERATION — FIXED & ENHANCED
+   Root cause: the original code only rendered meta fields and
+   never looped through progress lines or resource rows before
+   saving. The new version renders all sections with correct
+   page-break / y-position tracking and adds a signature block.
+══════════════════════════════════════════════════════════════ */
 async function downloadReportsPDF() {
-  if(!lastRepGroups.length){alert('No reports to export.');return;}
-  const overlay=document.getElementById('pdf-overlay'),progressTxt=document.getElementById('pdf-progress-text');
+  if(!lastRepGroups.length){ alert('No reports to export.'); return; }
+  const overlay    = document.getElementById('pdf-overlay');
+  const progressTxt= document.getElementById('pdf-progress-text');
   overlay.classList.add('visible');
+
   try {
-    const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'portrait',unit:'pt',format:'a4'});
-    const pageW=pdf.internal.pageSize.getWidth(),pageH=pdf.internal.pageSize.getHeight(),margin=36,isDark=currentTheme==='dark';
-    const dateVal=getDate('r-date'),dateStr=dateVal?fmtDisplay(dateVal):'—';
-    for(let i=0;i<lastRepGroups.length;i++){
-      const g=lastRepGroups[i]; progressTxt.textContent=`Rendering report ${i+1} of ${lastRepGroups.length}…`;
-      if(i>0)pdf.addPage(); let y=margin;
-      pdf.setFillColor(isDark?28:244,isDark?35:246,isDark?51:249);pdf.rect(0,0,pageW,72,'F');
-      pdf.setFillColor(224,123,57);pdf.rect(0,0,4,72,'F');
-      pdf.setFontSize(15);pdf.setFont('helvetica','bold');pdf.setTextColor(isDark?227:26,isDark?232:34,isDark?240:54);pdf.text('Gulf Petrochemical Services',margin+6,26);
-      pdf.setFontSize(7.5);pdf.setFont('helvetica','normal');pdf.setTextColor(isDark?139:90,isDark?150:104,isDark?171:128);pdf.text('OXY OMAN · CONTRACT #24000110790',margin+6,38);
-      const badgeText=`Work Report #${i+1}`;pdf.setFontSize(9);pdf.setFont('helvetica','bold');pdf.setTextColor(224,123,57);const badgeX=pageW-margin-pdf.getTextWidth(badgeText)-16;pdf.roundedRect(badgeX-8,10,pdf.getTextWidth(badgeText)+16,18,3,3,'F');pdf.text(badgeText,badgeX,22);
-      pdf.setFontSize(7.5);pdf.setFont('helvetica','normal');pdf.setTextColor(isDark?139:90,isDark?150:104,isDark?171:128);pdf.text(`Date: ${dateStr}`,pageW-margin-pdf.getTextWidth(`Date: ${dateStr}`),38);
-      pdf.setFontSize(11);pdf.setFont('helvetica','bold');pdf.setTextColor(isDark?227:26,isDark?232:34,isDark?240:54);pdf.text(`WI: ${g.wi}`,margin+6,58);y=88;
-      if(g.desc){pdf.setFontSize(8);pdf.setFont('helvetica','normal');pdf.setTextColor(isDark?139:90,isDark?150:104,isDark?171:128);const descLines=pdf.splitTextToSize(g.desc,pageW-margin*2-16);const descH=descLines.length*11+16;pdf.setFillColor(isDark?22:248,isDark?27:249,isDark?38:252);pdf.roundedRect(margin,y,pageW-margin*2,descH,3,3,'FD');pdf.text(descLines,margin+8,y+13);y+=descH+10;}
-      const metaItems=[['Foreman ID',g.id],['Foreman Name',g.crewLead],['Area / Block',g.area],['Discipline',g.discipline],['Permit No.',g.permitNo],['Work Hours',`${g.timeIn} → ${g.timeOut}`],['Manpower',String(g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length)],['Equipment',String(g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length)],['Crew Size',String(g.resources.size)]];
-      const cols=3,cellW=(pageW-margin*2)/cols,cellH=34;
-      metaItems.forEach((item,idx)=>{ const col=idx%cols,row=Math.floor(idx/cols),cx=margin+col*cellW,cy=y+row*cellH;pdf.setFillColor(isDark?34:240,isDark?44:242,isDark?61:246);pdf.setDrawColor(isDark?42:224,isDark?58:228,isDark?85:236);pdf.rect(cx,cy,cellW,cellH,'FD');pdf.setFontSize(6.5);pdf.setFont('helvetica','normal');pdf.setTextColor(isDark?64:160,isDark?77:172,isDark?99:190);pdf.text(item[0].toUpperCase(),cx+6,cy+11);pdf.setFontSize(8.5);pdf.setFont('helvetica','bold');pdf.setTextColor(isDark?227:26,isDark?232:34,isDark?240:54);const valLines=pdf.splitTextToSize(item[1],cellW-12);pdf.text(valLines[0],cx+6,cy+24); });
-      y+=Math.ceil(metaItems.length/cols)*cellH+14;
-      pdf.setFontSize(7);pdf.setFont('helvetica','normal');pdf.setTextColor(isDark?64:160,isDark?77:172,isDark?99:190);pdf.text(`Gulf Petrochemical Services LLC · Generated ${new Date().toLocaleDateString()} · Page ${i+1} of ${lastRepGroups.length}`,margin,pageH-18);pdf.setFillColor(224,123,57);pdf.rect(0,pageH-4,pageW,4,'F');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'pt', format:'a4' });
+    const pageW  = pdf.internal.pageSize.getWidth();
+    const pageH  = pdf.internal.pageSize.getHeight();
+    const M      = 36;          // left/right margin
+    const inner  = pageW - M*2; // usable width
+    const dateVal= getDate('r-date');
+    const dateStr= dateVal ? fmtDisplay(dateVal) : '—';
+    const genDate= new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+
+    /* ── colour helpers (pure RGB, no CSS vars) ── */
+    const C = {
+      accent  : [224, 123,  57],
+      text    : [ 26,  34,  54],
+      sub     : [ 90, 104, 128],
+      dim     : [160, 172, 190],
+      surface : [244, 246, 249],
+      surface2: [235, 238, 243],
+      border  : [210, 215, 224],
+      white   : [255, 255, 255],
+      green   : [ 46, 170, 126],
+      blue    : [ 58, 123, 213],
+      line    : [224, 226, 232],
+    };
+
+    /* ── low-level helpers ── */
+    const setFill   = c => pdf.setFillColor(...c);
+    const setDraw   = c => pdf.setDrawColor(...c);
+    const setTxtClr = c => pdf.setTextColor(...c);
+    const bold      = s => pdf.setFont('helvetica','bold');
+    const normal    = s => pdf.setFont('helvetica','normal');
+
+    function checkPage(y, needed, firstPageHeaderH) {
+      /* Returns updated y, adding a new page if needed. */
+      const bottomGuard = pageH - 20;
+      if (y + needed > bottomGuard) {
+        pdf.addPage();
+        y = drawContinuedHeader(firstPageHeaderH);
+      }
+      return y;
     }
-    pdf.save(`GPS_DailyReports_${getDate('r-date')?toKey(getDate('r-date')):'export'}.pdf`);
-  } catch(err){console.error(err);alert('PDF generation failed.');}
-  finally{overlay.classList.remove('visible');}
+
+    function drawContinuedHeader(reportNo, pageLabel) {
+      /* Minimal sticky header for continuation pages */
+      setFill(C.surface); pdf.rect(0,0,pageW,44,'F');
+      setFill(C.accent);  pdf.rect(0,0,4,44,'F');
+      setDraw(C.border);  pdf.setLineWidth(0.5); pdf.line(0,44,pageW,44);
+      bold(); pdf.setFontSize(9); setTxtClr(C.accent);
+      pdf.text(`Work Report #${reportNo}  (continued)`, M+6, 19);
+      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
+      pdf.text(`Gulf Petrochemical Services · ${dateStr}`, M+6, 33);
+      setTxtClr(C.dim); pdf.text(pageLabel||'', pageW-M, 33, {align:'right'});
+      return 56; // y after header
+    }
+
+    /* ── section title bar ── */
+    function sectionBar(y, title) {
+      setFill(C.surface2); pdf.rect(M, y, inner, 18, 'F');
+      setDraw(C.accent);   pdf.setLineWidth(2); pdf.line(M, y, M, y+18);
+      pdf.setLineWidth(0.5);
+      bold(); pdf.setFontSize(7); setTxtClr(C.sub);
+      pdf.text(title.toUpperCase(), M+8, y+12);
+      normal();
+      return y+18;
+    }
+
+    /* ── table row (alternating) ── */
+    function tableRow(y, cells, widths, rowH, isHeader, isAlt) {
+      if (isHeader) { setFill(C.surface2); }
+      else if (isAlt) { setFill([248,250,253]); }
+      else { setFill(C.white); }
+      pdf.rect(M, y, inner, rowH, 'F');
+
+      // bottom border
+      setDraw(C.line); pdf.setLineWidth(0.3);
+      pdf.line(M, y+rowH, M+inner, y+rowH);
+
+      let x = M;
+      cells.forEach((cell, ci) => {
+        const w = widths[ci];
+        if (isHeader) { bold(); pdf.setFontSize(6.5); setTxtClr(C.sub); }
+        else          { normal(); pdf.setFontSize(7.5); setTxtClr(C.text); }
+        const lines = pdf.splitTextToSize(String(cell||'—'), w-8);
+        pdf.text(lines[0], x+4, y + rowH/2 + (isHeader?2:2.5));
+        x += w;
+      });
+      return y + rowH;
+    }
+
+    /* ── outer border around a section ── */
+    function outerBorder(y0, y1) {
+      setDraw(C.border); pdf.setLineWidth(0.5);
+      pdf.rect(M, y0, inner, y1-y0);
+    }
+
+    /* ── meta grid (2 columns of key/value pairs) ── */
+    function metaGrid(y, items) {
+      const cols   = 3;
+      const cellW  = inner / cols;
+      const cellH  = 32;
+      const rows   = Math.ceil(items.length / cols);
+      const totalH = rows * cellH;
+
+      for (let ri=0; ri<rows; ri++) {
+        for (let ci=0; ci<cols; ci++) {
+          const idx = ri*cols + ci;
+          if (idx >= items.length) continue;
+          const cx = M + ci*cellW;
+          const cy = y + ri*cellH;
+          setFill(ci%2===0 ? C.surface : C.surface2);
+          setDraw(C.border); pdf.setLineWidth(0.3);
+          pdf.rect(cx, cy, cellW, cellH, 'FD');
+          // label
+          bold(); pdf.setFontSize(6); setTxtClr(C.dim);
+          pdf.text(String(items[idx][0]).toUpperCase(), cx+5, cy+10);
+          // value
+          normal(); pdf.setFontSize(8); setTxtClr(C.text);
+          const val = pdf.splitTextToSize(String(items[idx][1]||'—'), cellW-10);
+          pdf.text(val[0], cx+5, cy+22);
+        }
+      }
+      return y + totalH;
+    }
+
+    /* ── description box ── */
+    function descBox(y, text) {
+      if (!text) return y;
+      normal(); pdf.setFontSize(8); setTxtClr(C.sub);
+      const lines = pdf.splitTextToSize(text, inner-16);
+      const boxH  = lines.length * 11 + 14;
+      setFill([250,251,254]); setDraw(C.border); pdf.setLineWidth(0.3);
+      pdf.rect(M, y, inner, boxH, 'FD');
+      setDraw(C.accent); pdf.setLineWidth(2);
+      pdf.line(M, y, M, y+boxH);
+      pdf.setLineWidth(0.3);
+      pdf.text(lines, M+10, y+11);
+      return y + boxH + 6;
+    }
+
+    /* ── approval/signature section ── */
+    function signatureSection(y) {
+      const sigBoxH = 88;
+      const needed  = sigBoxH + 22;
+
+      // title bar
+      y = sectionBar(y, 'Approval & Signatures');
+
+      setDraw(C.border); pdf.setLineWidth(0.5);
+      pdf.rect(M, y, inner, sigBoxH, 'S'); // outer frame
+
+      const colW = inner / 3;
+      const roles = [
+        { title: 'Site Engineer',         color: C.green },
+        { title: 'Site Manager',          color: C.blue  },
+        { title: 'Client Representative', color: C.accent},
+      ];
+
+      roles.forEach((role, ci) => {
+        const cx = M + ci * colW;
+        // vertical divider (except first)
+        if (ci > 0) {
+          setDraw(C.border); pdf.setLineWidth(0.4);
+          pdf.line(cx, y, cx, y + sigBoxH);
+        }
+        // role header strip
+        pdf.setFillColor(...role.color);
+        pdf.rect(cx, y, colW, 14, 'F');
+        bold(); pdf.setFontSize(7.5); setTxtClr(C.white);
+        pdf.text(role.title, cx + colW/2, y+10, {align:'center'});
+
+        // fields
+        const fieldY  = y + 22;
+        const fieldGap= 18;
+        const fields  = ['Name:', 'Designation:', 'Signature:', 'Date:'];
+        fields.forEach((lbl, fi) => {
+          normal(); pdf.setFontSize(7); setTxtClr(C.sub);
+          pdf.text(lbl, cx+6, fieldY + fi*fieldGap);
+          setDraw(C.line); pdf.setLineWidth(0.4);
+          pdf.line(cx + 38, fieldY + fi*fieldGap + 1, cx + colW - 6, fieldY + fi*fieldGap + 1);
+        });
+      });
+
+      return y + sigBoxH + 10;
+    }
+
+    /* ══ MAIN LOOP — one report per page ══ */
+    const totalPages = lastRepGroups.length;
+
+    for (let i = 0; i < totalPages; i++) {
+      const g = lastRepGroups[i];
+      progressTxt.textContent = `Rendering report ${i+1} of ${totalPages}…`;
+      if (i > 0) pdf.addPage();
+
+      // ── PAGE HEADER ──────────────────────────────────────────
+      setFill(C.surface); pdf.rect(0, 0, pageW, 72, 'F');
+      setFill(C.accent);  pdf.rect(0, 0, 4, 72, 'F');
+
+      // logo placeholder
+      setFill(C.surface2); setDraw(C.border); pdf.setLineWidth(0.5);
+      pdf.roundedRect(M+4, 12, 36, 36, 3, 3, 'FD');
+      bold(); pdf.setFontSize(7); setTxtClr(C.accent);
+      pdf.text('GPS', M+22, 34, {align:'center'});
+
+      // company name
+      bold(); pdf.setFontSize(14); setTxtClr(C.text);
+      pdf.text('Gulf Petrochemical Services', M+48, 27);
+      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
+      pdf.text('OXY OMAN · CONTRACT #24000110790', M+48, 39);
+
+      // report badge (top right)
+      const badge = `Work Report #${i+1}`;
+      bold(); pdf.setFontSize(9); setTxtClr(C.white);
+      const bw = pdf.getTextWidth(badge) + 22;
+      const bx = pageW - M - bw;
+      setFill(C.accent); pdf.roundedRect(bx, 10, bw, 19, 3, 3, 'F');
+      pdf.text(badge, bx + bw/2, 23, {align:'center'});
+
+      // WI number under badge
+      normal(); pdf.setFontSize(7.5); setTxtClr(C.sub);
+      pdf.text(`WI: ${g.wi}`, pageW-M, 40, {align:'right'});
+      pdf.text(`Date: ${dateStr}`, pageW-M, 51, {align:'right'});
+
+      // page number
+      setTxtClr(C.dim); pdf.setFontSize(7);
+      pdf.text(`Page ${i+1} of ${totalPages}`, pageW-M, 65, {align:'right'});
+
+      // separator line
+      setDraw(C.border); pdf.setLineWidth(0.5);
+      pdf.line(0, 72, pageW, 72);
+
+      let y = 82;
+      const pLabel = `Page ${i+1} of ${totalPages}`;
+
+      // ── WORK DESCRIPTION ─────────────────────────────────────
+      if (g.desc) {
+        y = checkPage(y, 40, i+1);
+        y = sectionBar(y, 'Work Description');
+        y = descBox(y, g.desc);
+        y += 4;
+      }
+
+      // ── META GRID ────────────────────────────────────────────
+      const mp = g.resourceRows.filter(r=>r.type.toLowerCase()==='manpower').length;
+      const eq = g.resourceRows.filter(r=>r.type.toLowerCase()==='equipment').length;
+      y = checkPage(y, 20, i+1);
+      y = sectionBar(y, 'Report Details');
+      const metaItems = [
+        ['Foreman ID',   g.id],
+        ['Foreman Name', g.crewLead],
+        ['Area / Block', g.area],
+        ['Discipline',   g.discipline],
+        ['Permit No.',   g.permitNo],
+        ['Work Hours',   `${g.timeIn} → ${g.timeOut}`],
+        ['Manpower',     String(mp)],
+        ['Equipment',    String(eq)],
+        ['Crew Size',    String(g.resources.size)],
+      ];
+      y = checkPage(y, Math.ceil(metaItems.length/3)*32 + 4, i+1);
+      y = metaGrid(y, metaItems);
+      y += 10;
+
+      // ── PROGRESS DETAILS TABLE ───────────────────────────────
+      const progressLines = g.progress.replace(/"/g,'').split('\n')
+        .map(l=>l.trim()).filter(Boolean)
+        .map(l=>{ const idx=l.lastIndexOf('='); return idx!==-1?[l.slice(0,idx).trim(),l.slice(idx+1).trim()]:[l,'—']; });
+
+      y = checkPage(y, 36, i+1);
+      y = sectionBar(y, `Progress Details (${progressLines.length} item${progressLines.length!==1?'s':''})`);
+
+      const progWidths = [30, inner-80, 50];
+      y = tableRow(y, ['#','Description','Quantity'], progWidths, 16, true);
+      if (progressLines.length) {
+        progressLines.forEach((pl, j) => {
+          y = checkPage(y, 16, i+1);
+          y = tableRow(y, [j+1, pl[0], pl[1]], progWidths, 16, false, j%2===1);
+        });
+      } else {
+        y = checkPage(y, 16, i+1);
+        normal(); pdf.setFontSize(7.5); setTxtClr(C.dim);
+        pdf.text('No progress data recorded.', M+8, y+11);
+        y += 16;
+      }
+      y += 10;
+
+      // ── RESOURCES TABLE ──────────────────────────────────────
+      // THIS SECTION WAS MISSING IN THE ORIGINAL CODE
+      y = checkPage(y, 36, i+1);
+      y = sectionBar(y, `Resources (${g.resourceRows.length} record${g.resourceRows.length!==1?'s':''})`);
+
+      const resColW = [30, 80, inner-310, 75, 60, 65];
+      y = tableRow(y,
+        ['#','Resource ID','Designation','Type','Time-In','Time-Out'],
+        resColW, 16, true
+      );
+
+      if (g.resourceRows.length) {
+        g.resourceRows.forEach((r, j) => {
+          y = checkPage(y, 16, i+1);
+          const typeLabel = r.type.toLowerCase()==='manpower'
+            ? 'Manpower'
+            : r.type.toLowerCase()==='equipment'
+              ? 'Equipment'
+              : r.type||'—';
+          y = tableRow(y,
+            [j+1, r.id, r.desig, typeLabel, r.tin, r.tout],
+            resColW, 16, false, j%2===1
+          );
+        });
+      } else {
+        normal(); pdf.setFontSize(7.5); setTxtClr(C.dim);
+        pdf.text('No resource records found.', M+8, y+11);
+        y += 16;
+      }
+      y += 12;
+
+      // ── SIGNATURE / APPROVAL SECTION ─────────────────────────
+      // Ensure there's room; if not, add a new page
+      const sigNeeded = 120;
+      if (y + sigNeeded > pageH - 30) {
+        pdf.addPage();
+        y = drawContinuedHeader(i+1, pLabel);
+      }
+      y = signatureSection(y);
+
+      // ── PAGE FOOTER ──────────────────────────────────────────
+      setFill(C.accent); pdf.rect(0, pageH-5, pageW, 5, 'F');
+      setDraw(C.border); pdf.setLineWidth(0.3); pdf.line(0, pageH-18, pageW, pageH-18);
+      normal(); pdf.setFontSize(6.5); setTxtClr(C.dim);
+      pdf.text(
+        `Gulf Petrochemical Services LLC · Generated ${genDate} · ${pLabel}`,
+        pageW/2, pageH-8, {align:'center'}
+      );
+    } // end report loop
+
+    const filename = `GPS_DailyReports_${dateVal?toKey(dateVal):'export'}.pdf`;
+    pdf.save(filename);
+
+  } catch(err) {
+    console.error(err);
+    alert('PDF generation failed: ' + err.message);
+  } finally {
+    overlay.classList.remove('visible');
+  }
 }
 
 /* ══ REPORT SUMMARY ══ */
@@ -1160,10 +1392,10 @@ function campUpdateStats(rows) {
       {label:'POL',   value:polCount,  icon:'fa-user-clock', color:'sp-warn'},
     ]},
     { label:'Camp Resources', pills:[
-      {label:'Safah MP',     value:safahTotal, icon:'fa-person-digging', color:'sp-green'},
-      {label:'Wadi MP',      value:wadiTotal,  icon:'fa-person-digging', color:'sp-orange'},
-      {label:'Safah EQ',     value:safahEQ,    icon:'fa-gear',           color:'sp-blue'},
-      {label:'Wadi EQ',      value:wadiEQ,     icon:'fa-gear',           color:'sp-teal'},
+      {label:'Safah MP',  value:safahTotal, icon:'fa-person-digging', color:'sp-green'},
+      {label:'Wadi MP',   value:wadiTotal,  icon:'fa-person-digging', color:'sp-orange'},
+      {label:'Safah EQ',  value:safahEQ,    icon:'fa-gear',           color:'sp-blue'},
+      {label:'Wadi EQ',   value:wadiEQ,     icon:'fa-gear',           color:'sp-teal'},
     ]},
   ]);
 }
