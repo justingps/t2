@@ -746,7 +746,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function bootDashboard() {
-  const today=new Date(), yest=offsetDate(today,-1), weekStart=offsetDate(yest,-6);
+  const today=new Date(), yest=offsetDate(today,-1), weekStart=offsetDate(yest,-15);
   setDateVal('r-date',yest); setDateVal('st-date',yest); setDateVal('res-date',yest);
   setDateVal('sum-start',weekStart); setDateVal('sum-end',yest);
   setDateVal('kpi-start',weekStart); setDateVal('kpi-end',yest);
